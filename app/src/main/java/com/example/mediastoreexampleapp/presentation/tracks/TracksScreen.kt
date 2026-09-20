@@ -3,7 +3,6 @@ package com.example.mediastoreexampleapp.presentation.tracks
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -18,6 +17,13 @@ fun TracksScreen(
     modifier: Modifier = Modifier,
     viewModel: TracksViewModel = hiltViewModel()
 ) {
+    RequestAudioPermission(viewModel::getTracks)
+}
+
+@Composable
+fun RequestAudioPermission(
+    onGranted: () -> Unit
+) {
     val context = LocalContext.current
 
     val permission =
@@ -27,7 +33,7 @@ fun TracksScreen(
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) viewModel.getTracks()
+        if (granted) onGranted()
     }
 
     LaunchedEffect(Unit) {
@@ -37,7 +43,7 @@ fun TracksScreen(
                 permission
             ) == PackageManager.PERMISSION_GRANTED
         if (isGranted) {
-            viewModel.getTracks()
+            onGranted()
         } else {
             launcher.launch(permission)
         }
