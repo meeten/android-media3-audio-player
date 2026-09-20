@@ -1,8 +1,8 @@
 package com.example.mediastoreexampleapp.data.di
 
 import android.content.Context
-import com.example.mediastoreexampleapp.data.repository.TracksRepositoryImpl
-import com.example.mediastoreexampleapp.domain.repository.TracksRepository
+import com.example.mediastoreexampleapp.data.repository.LocalAudioRepositoryImpl
+import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,7 @@ import dagger.hilt.components.SingletonComponent
 object DataModule {
 
     @Provides
-    fun provideTracksRepository(@ApplicationContext context: Context): TracksRepository {
-        return TracksRepositoryImpl(context.contentResolver)
+    fun provideTracksRepository(@ApplicationContext context: Context): LocalAudioRepository {
+        return LocalAudioRepositoryImpl(context.contentResolver)
     }
 }

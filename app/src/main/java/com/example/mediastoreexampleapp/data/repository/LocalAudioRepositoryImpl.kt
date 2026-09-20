@@ -2,20 +2,19 @@ package com.example.mediastoreexampleapp.data.repository
 
 import android.content.ContentResolver
 import android.provider.MediaStore
-import android.util.Log
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.repository.TracksRepository
+import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TracksRepositoryImpl @Inject constructor(
+class LocalAudioRepositoryImpl @Inject constructor(
     private val contentResolver: ContentResolver
-) : TracksRepository {
+) : LocalAudioRepository {
 
     override suspend fun getTracks(): List<Track> {
         return withContext(Dispatchers.IO) {

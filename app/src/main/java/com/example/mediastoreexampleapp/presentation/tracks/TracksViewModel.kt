@@ -3,14 +3,14 @@ package com.example.mediastoreexampleapp.presentation.tracks
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediastoreexampleapp.domain.repository.TracksRepository
+import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TracksViewModel @Inject constructor(
-    private val repository: TracksRepository
+    private val repository: LocalAudioRepository
 ) : ViewModel() {
 
     fun getTracks() {
