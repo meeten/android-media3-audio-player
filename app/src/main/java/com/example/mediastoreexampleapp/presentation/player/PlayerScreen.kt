@@ -30,6 +30,7 @@ fun PlayerScreen(
     LaunchedEffect(uri) {
         val mediaItem = MediaItem.fromUri(uri)
         player.setMediaItem(mediaItem)
+        player.prepare()
     }
 
     Box(
@@ -39,7 +40,6 @@ fun PlayerScreen(
         Button(
             modifier = modifier,
             onClick = {
-                player.prepare()
                 player.play()
             }
         ) {
