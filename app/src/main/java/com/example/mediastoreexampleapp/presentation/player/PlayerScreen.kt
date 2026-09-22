@@ -56,8 +56,16 @@ fun PlayerScreen(
         mutableStateOf(player.isPlaying)
     }
 
+    var isSeeking by remember {
+        mutableStateOf(false)
+    }
+
     var currentPosition by remember {
         mutableLongStateOf(0L)
+    }
+
+    var sliderPosition by remember {
+        mutableFloatStateOf(0f)
     }
 
     LaunchedEffect(track.uri) {
@@ -69,6 +77,9 @@ fun PlayerScreen(
     LaunchedEffect(isPlaying) {
         while (isPlaying) {
             currentPosition = player.currentPosition
+            if (!isSeeking) {
+                sliderPosition = currentPosition.toFloat()
+            }
             delay(1000.milliseconds)
         }
     }
@@ -102,17 +113,16 @@ fun PlayerScreen(
 
         Text(text = "${currentPosition.toTimeString()} / ${track.duration.toTimeString()}")
 
-        var sliderPosition by remember {
-            mutableFloatStateOf(0f)
-        }
         Slider(
             value = sliderPosition,
             onValueChange = {
+                isSeeking = true
                 sliderPosition = it
             },
             onValueChangeFinished = {
+                isSeeking = false
                 val positionMs = sliderPosition.toLong()
-                player.seekTo(positionMs )
+                player.seekTo(positionMs)
                 currentPosition = positionMs
             },
             valueRange = 0f..track.duration.toFloat()
