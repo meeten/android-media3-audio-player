@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MediaStoreExampleApp</string>
+    <string name="play">Играть</string>
 </resources>
