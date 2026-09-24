@@ -14,7 +14,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,7 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -38,34 +38,44 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun PlayerScreen(
     modifier: Modifier = Modifier,
-    track: Track = Track(
-        id = 40,
-        title = "Он Не Знает Ничего",
-        artist = "Краски",
-        duration = 207256,
-        uri = "content://media/external/audio/media/40".toUri()
-    ) // TODO: убрать дефолт значение, используется для разработки первой рабочей версии
+    viewModel: PlayerViewModel = hiltViewModel()
 ) {
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
     val context = LocalContext.current
 
+    //TODO: решить проблему с remember для создания ExoPlayer(case: смена конфигурации)
     val player = remember {
         ExoPlayer.Builder(context.applicationContext).build()
     }
 
-    var isPlaying by remember {
-        mutableStateOf(player.isPlaying)
+    PlayerScreen(
+        modifier = modifier,
+        player = player,
+        track = uiState.track,
+        isPlaying = uiState.isPlaying,
+        currentPosition = uiState.currentPosition,
+        onChangePlaying = viewModel::changePlaying,
+        onChangeCurrentPosition = viewModel::changeCurrentPosition,
+    )
+}
+
+@Composable
+fun PlayerScreen(
+    modifier: Modifier = Modifier,
+    player: ExoPlayer,
+    track: Track,
+    isPlaying: Boolean,
+    currentPosition: Long,
+    onChangePlaying: (Boolean) -> Unit,
+    onChangeCurrentPosition: (Long) -> Unit,
+) {
+    var sliderPosition by remember {
+        mutableFloatStateOf(0.0f)
     }
 
     var isSeeking by remember {
         mutableStateOf(false)
-    }
-
-    var currentPosition by remember {
-        mutableLongStateOf(0L)
-    }
-
-    var sliderPosition by remember {
-        mutableFloatStateOf(0f)
     }
 
     LaunchedEffect(track.uri) {
@@ -76,9 +86,10 @@ fun PlayerScreen(
 
     LaunchedEffect(isPlaying) {
         while (isPlaying) {
-            currentPosition = player.currentPosition
+            val position = player.currentPosition
+            onChangeCurrentPosition(position)
             if (!isSeeking) {
-                sliderPosition = currentPosition.toFloat()
+                sliderPosition = position.toFloat()
             }
             delay(1000.milliseconds)
         }
@@ -120,10 +131,10 @@ fun PlayerScreen(
                 sliderPosition = it
             },
             onValueChangeFinished = {
-                isSeeking = false
                 val positionMs = sliderPosition.toLong()
                 player.seekTo(positionMs)
-                currentPosition = positionMs
+                onChangeCurrentPosition(positionMs)
+                isSeeking = false
             },
             valueRange = 0f..track.duration.toFloat()
         )
@@ -139,7 +150,7 @@ fun PlayerScreen(
     DisposableEffect(player) {
         val listener = object : Player.Listener {
             override fun onIsPlayingChanged(playining: Boolean) {
-                isPlaying = playining
+                onChangePlaying(playining)
             }
         }
 
