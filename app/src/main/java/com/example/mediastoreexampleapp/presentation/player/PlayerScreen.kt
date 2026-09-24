@@ -1,5 +1,6 @@
 package com.example.mediastoreexampleapp.presentation.player
 
+import android.content.ComponentName
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,11 +28,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.presentation.player.extension.toTimeString
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.guava.await
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,32 +47,55 @@ fun PlayerScreen(
 
     val context = LocalContext.current
 
-    //TODO: решить проблему с remember для создания ExoPlayer(case: смена конфигурации)
-    val player = remember {
-        ExoPlayer.Builder(context.applicationContext).build()
+    val sessionToken = remember {
+        SessionToken(
+            context.applicationContext, ComponentName(
+                context,
+                PlaybackService::class.java
+            )
+        )
+    }
+    val controllerFuture = remember {
+        MediaController.Builder(context.applicationContext, sessionToken).buildAsync()
+    }
+
+    var mediaController by remember {
+        mutableStateOf<MediaController?>(null)
+    }
+
+    LaunchedEffect(controllerFuture) {
+        mediaController = controllerFuture.await()
     }
 
     PlayerScreen(
         modifier = modifier,
-        player = player,
+        mediaController = mediaController,
         track = uiState.track,
         isPlaying = uiState.isPlaying,
         currentPosition = uiState.currentPosition,
         onChangePlaying = viewModel::changePlaying,
         onChangeCurrentPosition = viewModel::changeCurrentPosition,
     )
+
+    DisposableEffect(controllerFuture) {
+        onDispose {
+            MediaController.releaseFuture(controllerFuture)
+        }
+    }
 }
 
 @Composable
 fun PlayerScreen(
     modifier: Modifier = Modifier,
-    player: ExoPlayer,
+    mediaController: MediaController?,
     track: Track,
     isPlaying: Boolean,
     currentPosition: Long,
     onChangePlaying: (Boolean) -> Unit,
     onChangeCurrentPosition: (Long) -> Unit,
 ) {
+    if (mediaController == null) return
+
     var sliderPosition by remember {
         mutableFloatStateOf(0.0f)
     }
@@ -80,13 +106,13 @@ fun PlayerScreen(
 
     LaunchedEffect(track.uri) {
         val mediaItem = MediaItem.fromUri(track.uri)
-        player.setMediaItem(mediaItem)
-        player.prepare()
+        mediaController.setMediaItem(mediaItem)
+        mediaController.prepare()
     }
 
     LaunchedEffect(isPlaying) {
         while (isPlaying) {
-            val position = player.currentPosition
+            val position = mediaController.currentPosition
             onChangeCurrentPosition(position)
             if (!isSeeking) {
                 sliderPosition = position.toFloat()
@@ -105,7 +131,7 @@ fun PlayerScreen(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                player.play()
+                mediaController.play()
             },
             enabled = !isPlaying
         ) {
@@ -115,7 +141,7 @@ fun PlayerScreen(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                player.pause()
+                mediaController.pause()
             },
             enabled = isPlaying
         ) {
@@ -132,8 +158,7 @@ fun PlayerScreen(
             },
             onValueChangeFinished = {
                 val positionMs = sliderPosition.toLong()
-                player.seekTo(positionMs)
-                onChangeCurrentPosition(positionMs)
+                mediaController.seekTo(positionMs)
                 isSeeking = false
             },
             valueRange = 0f..track.duration.toFloat()
@@ -147,18 +172,24 @@ fun PlayerScreen(
         )
     }
 
-    DisposableEffect(player) {
+    DisposableEffect(mediaController) {
         val listener = object : Player.Listener {
             override fun onIsPlayingChanged(playining: Boolean) {
                 onChangePlaying(playining)
             }
+
+            override fun onEvents(player: Player, events: Player.Events) {
+                if (events.contains(Player.EVENT_POSITION_DISCONTINUITY)) {
+                    val currentPosition = player.currentPosition
+                    onChangeCurrentPosition(currentPosition)
+                }
+            }
         }
 
-        player.addListener(listener)
+        mediaController.addListener(listener)
 
         onDispose {
-            player.removeListener(listener)
-            player.release()
+            mediaController.removeListener(listener)
         }
     }
 }
