@@ -47,6 +47,8 @@ dependencies {
     //media3
     implementation("androidx.media3:media3-exoplayer:1.11.1")
     implementation("androidx.media3:media3-ui-compose:1.11.1")
+    implementation("androidx.media3:media3-session:1.11.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.11.0")
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
