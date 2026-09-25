@@ -8,13 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,6 +29,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import androidx.media3.ui.compose.material3.indicator.ProgressSlider
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.presentation.player.extension.toTimeString
@@ -72,9 +72,7 @@ fun PlayerScreen(
         mediaController = mediaController,
         track = uiState.track,
         isPlaying = uiState.isPlaying,
-        currentPosition = uiState.currentPosition,
         onChangePlaying = viewModel::changePlaying,
-        onChangeCurrentPosition = viewModel::changeCurrentPosition,
     )
 
     DisposableEffect(controllerFuture) {
@@ -90,19 +88,11 @@ fun PlayerScreen(
     mediaController: MediaController?,
     track: Track,
     isPlaying: Boolean,
-    currentPosition: Long,
     onChangePlaying: (Boolean) -> Unit,
-    onChangeCurrentPosition: (Long) -> Unit,
 ) {
     if (mediaController == null) return
 
-    var sliderPosition by remember {
-        mutableFloatStateOf(0.0f)
-    }
-
-    var isSeeking by remember {
-        mutableStateOf(false)
-    }
+    var currentPosition by remember { mutableLongStateOf(0L) }
 
     LaunchedEffect(track.uri) {
         val mediaItem = MediaItem.fromUri(track.uri)
@@ -112,11 +102,7 @@ fun PlayerScreen(
 
     LaunchedEffect(isPlaying) {
         while (isPlaying) {
-            val position = mediaController.currentPosition
-            onChangeCurrentPosition(position)
-            if (!isSeeking) {
-                sliderPosition = position.toFloat()
-            }
+            currentPosition = mediaController.currentPosition
             delay(1000.milliseconds)
         }
     }
@@ -150,18 +136,9 @@ fun PlayerScreen(
 
         Text(text = "${currentPosition.toTimeString()} / ${track.duration.toTimeString()}")
 
-        Slider(
-            value = sliderPosition,
-            onValueChange = {
-                isSeeking = true
-                sliderPosition = it
-            },
-            onValueChangeFinished = {
-                val positionMs = sliderPosition.toLong()
-                mediaController.seekTo(positionMs)
-                isSeeking = false
-            },
-            valueRange = 0f..track.duration.toFloat()
+        ProgressSlider(
+            mediaController,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Text(
@@ -176,13 +153,6 @@ fun PlayerScreen(
         val listener = object : Player.Listener {
             override fun onIsPlayingChanged(playining: Boolean) {
                 onChangePlaying(playining)
-            }
-
-            override fun onEvents(player: Player, events: Player.Events) {
-                if (events.contains(Player.EVENT_POSITION_DISCONTINUITY)) {
-                    val currentPosition = player.currentPosition
-                    onChangeCurrentPosition(currentPosition)
-                }
             }
         }
 

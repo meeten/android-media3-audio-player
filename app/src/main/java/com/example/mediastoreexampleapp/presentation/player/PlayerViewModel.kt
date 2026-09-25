@@ -19,8 +19,4 @@ class PlayerViewModel @Inject constructor(
     fun changePlaying(isPlaying: Boolean) {
         _uiState.update { it.copy(isPlaying = isPlaying) }
     }
-
-    fun changeCurrentPosition(currentPosition: Long) {
-        _uiState.update { it.copy(currentPosition = currentPosition) }
-    }
 }

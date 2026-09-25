@@ -12,5 +12,4 @@ data class PlayerScreenState(
         uri = "content://media/external/audio/media/40".toUri()
     ),
     val isPlaying: Boolean = false,
-    val currentPosition: Long = 0L
 )
