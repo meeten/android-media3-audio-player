@@ -1,8 +1,11 @@
 package com.example.mediastoreexampleapp.presentation.player
 
 import android.content.ComponentName
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -70,9 +73,11 @@ fun PlayerScreen(
     PlayerScreen(
         modifier = modifier,
         mediaController = mediaController,
-        track = uiState.track,
+        playlist = uiState.playlist,
+        startIndex = uiState.currentIndex,
         isPlaying = uiState.isPlaying,
         onChangePlaying = viewModel::changePlaying,
+        onChangeCurrentIndex = viewModel::changeCurrentIndex
     )
 
     DisposableEffect(controllerFuture) {
@@ -86,17 +91,22 @@ fun PlayerScreen(
 fun PlayerScreen(
     modifier: Modifier = Modifier,
     mediaController: MediaController?,
-    track: Track,
+    playlist: List<Track>,
+    startIndex: Int,
     isPlaying: Boolean,
     onChangePlaying: (Boolean) -> Unit,
+    onChangeCurrentIndex: (Int) -> Unit
 ) {
     if (mediaController == null) return
 
     var currentPosition by remember { mutableLongStateOf(0L) }
 
-    LaunchedEffect(track.uri) {
-        val mediaItem = MediaItem.fromUri(track.uri)
-        mediaController.setMediaItem(mediaItem)
+    LaunchedEffect(playlist, startIndex) {
+        mediaController.setMediaItems(
+            playlist.map { MediaItem.fromUri(it.uri) },
+            startIndex,
+            0
+        )
         mediaController.prepare()
     }
 
@@ -134,7 +144,8 @@ fun PlayerScreen(
             Text(text = stringResource(R.string.pause))
         }
 
-        Text(text = "${currentPosition.toTimeString()} / ${track.duration.toTimeString()}")
+        val currentTrack = playlist[mediaController.currentMediaItemIndex]
+        Text(text = "${currentPosition.toTimeString()} / ${currentTrack.duration.toTimeString()}")
 
         ProgressSlider(
             mediaController,
@@ -144,15 +155,37 @@ fun PlayerScreen(
         Text(
             text = stringResource(
                 R.string.left,
-                (track.duration - currentPosition).toTimeString()
+                (currentTrack.duration - currentPosition).toTimeString()
             )
         )
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = stringResource(R.string.previous),
+                modifier = modifier.clickable {
+                    mediaController.seekToPrevious()
+                }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = stringResource(R.string.next),
+                modifier = modifier.clickable {
+                    mediaController.seekToNext()
+                }
+            )
+        }
     }
 
     DisposableEffect(mediaController) {
         val listener = object : Player.Listener {
             override fun onIsPlayingChanged(playining: Boolean) {
                 onChangePlaying(playining)
+            }
+
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                onChangeCurrentIndex(mediaController.currentMediaItemIndex)
             }
         }
 
