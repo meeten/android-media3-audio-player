@@ -101,7 +101,7 @@ fun PlayerScreen(
 
     var currentPosition by remember { mutableLongStateOf(0L) }
 
-    LaunchedEffect(playlist, startIndex) {
+    LaunchedEffect(playlist) {
         mediaController.setMediaItems(
             playlist.map { MediaItem.fromUri(it.uri) },
             startIndex,
