@@ -15,10 +15,10 @@ class TracksViewModel @Inject constructor(
 
     fun getTracks() {
         viewModelScope.launch {
-            val tracks = repository.getTracks()
-
-            tracks.forEach {
-                Log.d("TracksViewModel", it.toString())
+            repository.tracksFlow.collect { tracks ->
+                tracks.forEach {
+                    Log.d("TracksViewModel", it.toString())
+                }
             }
         }
     }

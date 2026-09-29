@@ -1,8 +1,9 @@
 package com.example.mediastoreexampleapp.domain.repository
 
 import com.example.mediastoreexampleapp.domain.model.Track
+import kotlinx.coroutines.flow.StateFlow
 
 interface LocalAudioRepository {
 
-    suspend fun getTracks(): List<Track>
+    val tracksFlow: StateFlow<List<Track>>
 }
