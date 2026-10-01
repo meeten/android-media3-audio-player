@@ -42,7 +42,11 @@ dependencies {
     //hilt
     implementation("com.google.dagger:hilt-android:2.60.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.4.0")
+    implementation(libs.androidx.compose.runtime)
     ksp("com.google.dagger:hilt-compiler:2.60.1")
+
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.10.2")
 
     //media3
     implementation("androidx.media3:media3-exoplayer:1.11.1")
