@@ -1,26 +1,46 @@
 package com.example.mediastoreexampleapp.presentation.player
 
 import androidx.lifecycle.ViewModel
-import com.example.mediastoreexampleapp.presentation.player.model.PlayerScreenState
+import androidx.lifecycle.viewModelScope
+import com.example.mediastoreexampleapp.domain.repository.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    //TODO позже добавится конструктор с currentIndex и playlist
+    private val playerController: PlayerController
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PlayerScreenState())
-    val uiState = _uiState.asStateFlow()
+    val uiState = playerController.playerState
 
-    fun changePlaying(isPlaying: Boolean) {
-        _uiState.update { it.copy(isPlaying = isPlaying) }
+    fun play() {
+        viewModelScope.launch {
+            playerController.play()
+        }
     }
 
-    fun changeCurrentIndex(currentIndex: Int) {
-        _uiState.update { it.copy(currentIndex = currentIndex) }
+    fun pause() {
+        viewModelScope.launch {
+            playerController.pause()
+        }
+    }
+
+    fun changeCurrentPosition(currentPositionMs: Long) {
+        viewModelScope.launch {
+            playerController.setCurrentPosition(currentPositionMs)
+        }
+    }
+
+    fun next() {
+        viewModelScope.launch {
+            playerController.next()
+        }
+    }
+
+    fun previous() {
+        viewModelScope.launch {
+            playerController.previous()
+        }
     }
 }
