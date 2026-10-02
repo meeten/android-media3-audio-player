@@ -1,8 +1,10 @@
 package com.example.mediastoreexampleapp.data.repository
 
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.Player.STATE_BUFFERING
 import androidx.media3.session.MediaController
 import com.example.mediastoreexampleapp.domain.model.PlayerState
 import com.example.mediastoreexampleapp.domain.model.Track
@@ -86,9 +88,18 @@ class PlayerControllerImpl @Inject constructor(
 
     private fun setMediaControllerListener(controller: MediaController) {
         val listener = object : Player.Listener {
-            override fun onIsPlayingChanged(playing: Boolean) {
-                _playerState.update { it.copy(isPlaying = playing) }
-                if (playing) startTimer(controller) else timerJob?.cancel()
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                _playerState.update {
+                    it.copy(isPlaying = playWhenReady)
+                }
+            }
+
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                if (isPlaying) {
+                    startTimer(controller)
+                } else {
+                    timerJob?.cancel()
+                }
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
@@ -97,7 +108,7 @@ class PlayerControllerImpl @Inject constructor(
                 val currentTrackIndex = controller.currentMediaItemIndex
 
                 _playerState.update { state ->
-                    if (currentTrackIndex !in _playerState.value.playlist.indices) {
+                    if (currentTrackIndex !in state.playlist.indices) {
                         state
                     } else {
                         state.copy(
