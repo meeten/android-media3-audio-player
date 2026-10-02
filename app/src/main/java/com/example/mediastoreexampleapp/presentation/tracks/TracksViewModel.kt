@@ -7,6 +7,7 @@ import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.repository.PlayerController
 import com.example.mediastoreexampleapp.presentation.tracks.model.TracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -18,12 +19,15 @@ class TracksViewModel @Inject constructor(
     private val playerController: PlayerController
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<TracksScreenState>(TracksScreenState.Loading)
+    private val _uiState = MutableStateFlow<TracksScreenState>(TracksScreenState.PermissionRequired)
     val uiState = _uiState.asStateFlow()
 
-
+    var tracksJob: Job? = null
     fun getTracks() {
-        viewModelScope.launch {
+        if (tracksJob?.isActive == true) return
+
+        tracksJob = viewModelScope.launch {
+            _uiState.value = TracksScreenState.Loading
             repository.tracksFlow.collect { tracks ->
                 _uiState.value = TracksScreenState.Content(tracks)
             }
