@@ -9,17 +9,21 @@ import androidx.navigation.compose.composable
 fun AppNavGraph(
     navController: NavHostController,
     tracksScreenContent: @Composable () -> Unit,
+    remoteTracksScreenContent: @Composable () -> Unit,
     playerScreenContent: @Composable () -> Unit
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Tracks.route
+        startDestination = Screen.RemoteTracks.route
     ) {
         composable(route = Screen.Tracks.route) {
             tracksScreenContent()
         }
         composable(route = Screen.Player.route) {
             playerScreenContent()
+        }
+        composable(route = Screen.RemoteTracks.route) {
+            remoteTracksScreenContent()
         }
     }
 }

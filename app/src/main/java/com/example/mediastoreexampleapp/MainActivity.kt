@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.mediastoreexampleapp.navigation.AppNavGraph
 import com.example.mediastoreexampleapp.navigation.rememberNavigationState
 import com.example.mediastoreexampleapp.presentation.player.PlayerScreen
-import com.example.mediastoreexampleapp.presentation.tracks.TracksScreen
+import com.example.mediastoreexampleapp.presentation.local_tracks.TracksScreen
+import com.example.mediastoreexampleapp.presentation.remote_tracks.RemoteTracksScreen
 import com.example.mediastoreexampleapp.ui.theme.MediaStoreExampleAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,11 +27,20 @@ class MainActivity : ComponentActivity() {
                 val navigationState = rememberNavigationState()
 
                 Scaffold() { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .padding(innerPadding)
+                    ) {
                         AppNavGraph(
                             navController = navigationState.navController,
                             tracksScreenContent = {
                                 TracksScreen(
+                                    onTrackClick = navigationState::navigateToPlayer
+                                )
+                            },
+                            remoteTracksScreenContent = {
+                                RemoteTracksScreen(
                                     onTrackClick = navigationState::navigateToPlayer
                                 )
                             },

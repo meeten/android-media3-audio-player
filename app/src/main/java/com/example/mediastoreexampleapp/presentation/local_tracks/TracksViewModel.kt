@@ -1,11 +1,11 @@
-package com.example.mediastoreexampleapp.presentation.tracks
+package com.example.mediastoreexampleapp.presentation.local_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.repository.PlayerController
-import com.example.mediastoreexampleapp.presentation.tracks.model.TracksScreenState
+import com.example.mediastoreexampleapp.presentation.local_tracks.model.TracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

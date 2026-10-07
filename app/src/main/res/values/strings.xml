@@ -9,4 +9,6 @@
     <string name="audio_permission_description">Разрешите доступ, чтобы увидеть доступные треки.</string>
     <string name="grant_audio_permission">Разрешить доступ</string>
     <string name="open_settings">Открыть настройки</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="retry">Повторить</string>
 </resources>

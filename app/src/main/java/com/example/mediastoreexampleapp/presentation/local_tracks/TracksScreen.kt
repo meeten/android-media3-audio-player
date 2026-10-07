@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.tracks
+package com.example.mediastoreexampleapp.presentation.local_tracks
 
 import android.Manifest
 import android.app.Activity
@@ -41,8 +41,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
-import com.example.mediastoreexampleapp.presentation.tracks.model.TracksScreenState
-import com.example.mediastoreexampleapp.presentation.tracks.ui.TracksScreenContent
+import com.example.mediastoreexampleapp.core.Loading
+import com.example.mediastoreexampleapp.presentation.local_tracks.model.TracksScreenState
+import com.example.mediastoreexampleapp.core.TracksScreenContent
 
 @Composable
 fun TracksScreen(
@@ -58,12 +59,7 @@ fun TracksScreen(
         }
 
         TracksScreenState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+            Loading()
         }
 
         is TracksScreenState.Content -> {

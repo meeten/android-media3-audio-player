@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.tracks.ui
+package com.example.mediastoreexampleapp.core
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

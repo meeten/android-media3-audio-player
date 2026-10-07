@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.tracks.model
+package com.example.mediastoreexampleapp.presentation.local_tracks.model
 
 import com.example.mediastoreexampleapp.domain.model.Track
 
