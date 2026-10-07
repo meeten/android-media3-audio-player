@@ -6,9 +6,11 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.example.mediastoreexampleapp.data.repository.LocalAudioRepositoryImpl
 import com.example.mediastoreexampleapp.data.repository.PlayerControllerImpl
+import com.example.mediastoreexampleapp.data.repository.RemoteAudioRepositoryImpl
 import com.example.mediastoreexampleapp.data.service.PlaybackService
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.repository.PlayerController
+import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.Binds
 import dagger.Module
@@ -27,6 +29,9 @@ interface DataModule {
 
     @Binds
     fun bindLocalAudioRepository(impl: LocalAudioRepositoryImpl): LocalAudioRepository
+
+    @Binds
+    fun bindRemoteAudioRepository(impl: RemoteAudioRepositoryImpl): RemoteAudioRepository
 
     @Binds
     fun bindPlayerController(impl: PlayerControllerImpl): PlayerController

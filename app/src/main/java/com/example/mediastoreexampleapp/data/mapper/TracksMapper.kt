@@ -3,6 +3,7 @@ package com.example.mediastoreexampleapp.data.mapper
 import android.content.ContentUris
 import android.database.Cursor
 import android.provider.MediaStore
+import com.example.mediastoreexampleapp.data.network.model.TrackDto
 import com.example.mediastoreexampleapp.domain.model.Track
 
 fun Cursor.toTrack(): Track {
@@ -20,3 +21,15 @@ fun Cursor.toTrack(): Track {
         uri = uri.toString()
     )
 }
+
+fun TrackDto.toTrack(): Track {
+    return Track(
+        id = id,
+        title = title,
+        duration = duration,
+        artist = artistDto.name ?: UNKNOWN_ARTIST,
+        uri = preview
+    )
+}
+
+private const val UNKNOWN_ARTIST = "Unknown"
