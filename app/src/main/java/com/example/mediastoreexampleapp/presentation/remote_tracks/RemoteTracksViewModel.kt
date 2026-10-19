@@ -38,7 +38,6 @@ class RemoteTracksViewModel @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 _uiState.value = RemoteTracksScreenState.Failure(message = e.message)
-                throw e
             }
         }
     }
