@@ -1,11 +1,11 @@
 package com.example.mediastoreexampleapp.data.network.model
 
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 
 data class TracksResponseDto(
-    @SerialName("tracks") val tracks: DataDto
+    @SerializedName("tracks") val tracks: DataDto
 )
 
 data class DataDto(
-    @SerialName("data") val data: List<TrackDto>
+    @SerializedName("data") val data: List<TrackDto>
 )
