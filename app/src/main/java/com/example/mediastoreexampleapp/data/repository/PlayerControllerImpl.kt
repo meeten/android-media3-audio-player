@@ -1,10 +1,9 @@
 package com.example.mediastoreexampleapp.data.repository
 
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import androidx.media3.common.Player.STATE_BUFFERING
 import androidx.media3.session.MediaController
 import com.example.mediastoreexampleapp.domain.model.PlayerState
 import com.example.mediastoreexampleapp.domain.model.Track
@@ -53,11 +52,24 @@ class PlayerControllerImpl @Inject constructor(
         _playerState.update {
             it.copy(
                 currentTrack = playlist[startIndex],
-                playlist = playlist
+                playlist = playlist,
             )
         }
+
         controller.setMediaItems(
-            playlist.map { MediaItem.fromUri(it.uri.toUri()) },
+            playlist.map {
+                MediaItem.Builder()
+                    .setMediaId(it.id.toString())
+                    .setUri(it.uri.toUri())
+                    .setMediaMetadata(
+                        MediaMetadata.Builder()
+                            .setTitle(it.title)
+                            .setArtist(it.artist)
+                            .setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC)
+                            .build()
+                    )
+                    .build()
+            },
             startIndex,
             START_POSITION_MS,
         )
@@ -99,6 +111,14 @@ class PlayerControllerImpl @Inject constructor(
                     startTimer(controller)
                 } else {
                     timerJob?.cancel()
+                }
+            }
+
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == Player.STATE_READY) {
+                    _playerState.update {
+                        it.copy(durationMs = controller.duration)
+                    }
                 }
             }
 
