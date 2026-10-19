@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         AppNavGraph(
                             navController = navigationState.navController,
-                            tracksScreenContent = {
+                            localTracksScreenContent = {
                                 TracksScreen(
                                     onTrackClick = { tracks, track ->
                                         viewModel.setPlaylistWithCurrentTrack(tracks, track)
