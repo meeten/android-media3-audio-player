@@ -2,9 +2,7 @@ package com.example.mediastoreexampleapp.presentation.local_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
-import com.example.mediastoreexampleapp.domain.repository.PlayerController
 import com.example.mediastoreexampleapp.presentation.local_tracks.model.TracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -16,7 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class TracksViewModel @Inject constructor(
     private val repository: LocalAudioRepository,
-    private val playerController: PlayerController
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<TracksScreenState>(TracksScreenState.PermissionRequired)
@@ -31,14 +28,6 @@ class TracksViewModel @Inject constructor(
             repository.tracksFlow.collect { tracks ->
                 _uiState.value = TracksScreenState.Content(tracks)
             }
-        }
-    }
-
-    fun setPlaylistWithCurrentTrack(tracks: List<Track>, track: Track) {
-        viewModelScope.launch {
-            val currentIndex = tracks.indexOfFirst { track.id == it.id }
-            if (currentIndex !in tracks.indices) return@launch
-            playerController.setPlaylist(playlist = tracks, startIndex = currentIndex)
         }
     }
 }

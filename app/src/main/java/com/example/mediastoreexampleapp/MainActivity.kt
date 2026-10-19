@@ -9,10 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.mediastoreexampleapp.navigation.AppNavGraph
 import com.example.mediastoreexampleapp.navigation.rememberNavigationState
-import com.example.mediastoreexampleapp.presentation.player.PlayerScreen
 import com.example.mediastoreexampleapp.presentation.local_tracks.TracksScreen
+import com.example.mediastoreexampleapp.presentation.player.PlayerScreen
 import com.example.mediastoreexampleapp.presentation.remote_tracks.RemoteTracksScreen
 import com.example.mediastoreexampleapp.ui.theme.MediaStoreExampleAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MediaStoreExampleAppTheme {
+                val viewModel: MainViewModel = hiltViewModel()
                 val navigationState = rememberNavigationState()
 
                 Scaffold() { innerPadding ->
@@ -36,12 +38,18 @@ class MainActivity : ComponentActivity() {
                             navController = navigationState.navController,
                             tracksScreenContent = {
                                 TracksScreen(
-                                    onTrackClick = navigationState::navigateToPlayer
+                                    onTrackClick = { tracks, track ->
+                                        viewModel.setPlaylistWithCurrentTrack(tracks, track)
+                                        navigationState.navigateToPlayer()
+                                    }
                                 )
                             },
                             remoteTracksScreenContent = {
                                 RemoteTracksScreen(
-                                    onTrackClick = navigationState::navigateToPlayer
+                                    onTrackClick = { tracks, track ->
+                                        viewModel.setPlaylistWithCurrentTrack(tracks, track)
+                                        navigationState.navigateToPlayer()
+                                    }
                                 )
                             },
                             playerScreenContent = {

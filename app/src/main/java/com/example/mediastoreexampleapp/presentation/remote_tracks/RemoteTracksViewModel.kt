@@ -2,8 +2,6 @@ package com.example.mediastoreexampleapp.presentation.remote_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.repository.PlayerController
 import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
 import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class RemoteTracksViewModel @Inject constructor(
     private val remoteAudioRepository: RemoteAudioRepository,
-    private val playerController: PlayerController
 ) : ViewModel() {
 
     private val _uiState =
@@ -39,14 +36,6 @@ class RemoteTracksViewModel @Inject constructor(
             } catch (e: Exception) {
                 _uiState.value = RemoteTracksScreenState.Failure(message = e.message)
             }
-        }
-    }
-
-    fun setPlaylistWithCurrentTrack(tracks: List<Track>, track: Track) {
-        viewModelScope.launch {
-            val currentIndex = tracks.indexOfFirst { track.id == it.id }
-            if (currentIndex !in tracks.indices) return@launch
-            playerController.setPlaylist(playlist = tracks, startIndex = currentIndex)
         }
     }
 

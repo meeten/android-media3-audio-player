@@ -15,13 +15,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.core.Loading
 import com.example.mediastoreexampleapp.core.TracksScreenContent
+import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksScreenState
 
 @Composable
 fun RemoteTracksScreen(
     modifier: Modifier = Modifier,
     viewModel: RemoteTracksViewModel = hiltViewModel(),
-    onTrackClick: () -> Unit
+    onTrackClick: (List<Track>, Track) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -36,8 +37,7 @@ fun RemoteTracksScreen(
                     modifier = modifier,
                     tracks = currentState.tracks,
                     onTrackClick = { track ->
-                        viewModel.setPlaylistWithCurrentTrack(currentState.tracks, track)
-                        onTrackClick()
+                        onTrackClick(currentState.tracks, track)
                     }
                 )
             }
