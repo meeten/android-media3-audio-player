@@ -5,11 +5,11 @@ import android.content.Context
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.example.mediastoreexampleapp.data.repository.LocalAudioRepositoryImpl
-import com.example.mediastoreexampleapp.data.repository.PlayerControllerImpl
+import com.example.mediastoreexampleapp.data.playback.PlayerControllerImpl
 import com.example.mediastoreexampleapp.data.repository.RemoteAudioRepositoryImpl
 import com.example.mediastoreexampleapp.data.service.PlaybackService
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
-import com.example.mediastoreexampleapp.domain.repository.PlayerController
+import com.example.mediastoreexampleapp.domain.playback.PlayerController
 import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.Binds
@@ -39,6 +39,7 @@ interface DataModule {
     companion object {
 
         @Provides
+        @Singleton
         fun provideCoroutineScope(): CoroutineScope {
             return CoroutineScope(SupervisorJob() + Dispatchers.Main)
         }
