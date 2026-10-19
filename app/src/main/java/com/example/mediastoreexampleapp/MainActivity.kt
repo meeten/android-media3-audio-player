@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.mediastoreexampleapp.navigation.AppNavGraph
 import com.example.mediastoreexampleapp.navigation.rememberNavigationState
@@ -28,11 +27,9 @@ class MainActivity : ComponentActivity() {
                 val viewModel: MainViewModel = hiltViewModel()
                 val navigationState = rememberNavigationState()
 
-                Scaffold() { innerPadding ->
+                Scaffold { innerPadding ->
                     Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding)
                     ) {
                         AppNavGraph(
                             navController = navigationState.navController,
