@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.data.repository
+package com.example.mediastoreexampleapp.data.playback
 
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
@@ -7,7 +7,7 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import com.example.mediastoreexampleapp.domain.model.PlayerState
 import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.repository.PlayerController
+import com.example.mediastoreexampleapp.domain.playback.PlayerController
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

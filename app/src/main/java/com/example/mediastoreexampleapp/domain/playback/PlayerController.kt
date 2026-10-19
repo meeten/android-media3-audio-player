@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.domain.repository
+package com.example.mediastoreexampleapp.domain.playback
 
 import com.example.mediastoreexampleapp.domain.model.PlayerState
 import com.example.mediastoreexampleapp.domain.model.Track
