@@ -2,7 +2,6 @@
     <string name="app_name">MediaStoreExampleApp</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
-    <string name="left">Осталось: %1$s</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="audio_permission_required">Чтобы показать вашу музыку, приложению нужен доступ к аудиофайлам на устройстве.</string>
@@ -11,4 +10,5 @@
     <string name="open_settings">Открыть настройки</string>
     <string name="unknown_error">Unknown error</string>
     <string name="retry">Повторить</string>
+    <string name="demo_30_sec">Демо: 30 сек</string>
 </resources>
