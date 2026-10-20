@@ -11,7 +11,6 @@ import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -42,13 +40,14 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.core.Loading
-import com.example.mediastoreexampleapp.presentation.local_tracks.model.TracksScreenState
 import com.example.mediastoreexampleapp.core.TracksScreenContent
+import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.presentation.local_tracks.model.TracksScreenState
 
 @Composable
 fun TracksScreen(
     modifier: Modifier = Modifier,
-    onTrackClick: () -> Unit,
+    onTrackClick: (List<Track>, Track) -> Unit,
     viewModel: TracksViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -67,8 +66,7 @@ fun TracksScreen(
                 modifier = modifier,
                 tracks = currentState.tracks,
                 onTrackClick = { track ->
-                    viewModel.setPlaylistWithCurrentTrack(currentState.tracks, track)
-                    onTrackClick()
+                    onTrackClick(currentState.tracks, track)
                 }
             )
         }
