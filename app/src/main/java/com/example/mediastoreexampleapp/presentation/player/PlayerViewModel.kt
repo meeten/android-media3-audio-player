@@ -2,7 +2,7 @@ package com.example.mediastoreexampleapp.presentation.player
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediastoreexampleapp.domain.repository.PlayerController
+import com.example.mediastoreexampleapp.domain.playback.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
