@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -31,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.presentation.player.extension.toTimeString
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +45,7 @@ fun PlayerScreen(
     PlayerScreen(
         modifier = modifier,
         currentTrack = uiState.currentTrack,
+        playbackDurationMs = uiState.durationMs,
         isPlaying = uiState.isPlaying,
         onPlay = viewModel::play,
         onPause = viewModel::pause,
@@ -57,6 +60,7 @@ fun PlayerScreen(
 fun PlayerScreen(
     modifier: Modifier = Modifier,
     currentTrack: Track?,
+    playbackDurationMs: Long,
     isPlaying: Boolean,
     onPlay: () -> Unit,
     onPause: () -> Unit,
@@ -101,7 +105,12 @@ fun PlayerScreen(
             Text(text = stringResource(R.string.pause))
         }
 
-        Text(text = "${currentPositionMs.toTimeString()} / ${currentTrack.duration.toTimeString()}")
+        if (currentTrack.isPreview) {
+            Text(
+                text = stringResource(R.string.demo_30_sec),
+                color = Color.Blue
+            )
+        }
 
         Slider(
             value = sliderPosition,
@@ -113,22 +122,24 @@ fun PlayerScreen(
                 onChangeCurrentPosition(sliderPosition.toLong())
                 isSeeking = false
             },
-            valueRange = 0f..currentTrack.duration.toFloat()
+            enabled = playbackDurationMs > 0,
+            valueRange = 0f..if (playbackDurationMs > 0) playbackDurationMs.toFloat() else 0f
         )
 
-        Text(
-            text = stringResource(
-                R.string.left,
-                maxOf(0, (currentTrack.duration - currentPositionMs)).toTimeString()
-            )
-        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(text = currentPositionMs.toTimeString())
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(text = playbackDurationMs.toTimeString())
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = stringResource(R.string.previous),
-                modifier = modifier.clickable {
+                modifier = Modifier.clickable {
                     onPrevious()
                 }
             )
@@ -137,7 +148,7 @@ fun PlayerScreen(
 
             Text(
                 text = stringResource(R.string.next),
-                modifier = modifier.clickable {
+                modifier = Modifier.clickable {
                     onNext()
                 }
             )
