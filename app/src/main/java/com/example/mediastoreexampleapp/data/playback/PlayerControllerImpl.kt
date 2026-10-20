@@ -153,7 +153,7 @@ class PlayerControllerImpl @Inject constructor(
                         currentPositionMs = controller.currentPosition
                     )
                 }
-                delay(SECOND_MS.milliseconds)
+                delay(ONE_SECOND_MS.milliseconds)
             }
         }
     }
@@ -161,6 +161,6 @@ class PlayerControllerImpl @Inject constructor(
     private companion object {
 
         const val START_POSITION_MS = 0L
-        const val SECOND_MS = 1000L
+        const val ONE_SECOND_MS = 1000L
     }
 }
