@@ -19,7 +19,7 @@ class TracksViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<TracksScreenState>(TracksScreenState.PermissionRequired)
     val uiState = _uiState.asStateFlow()
 
-    var tracksJob: Job? = null
+    private var tracksJob: Job? = null
     fun getTracks() {
         if (tracksJob?.isActive == true) return
 
