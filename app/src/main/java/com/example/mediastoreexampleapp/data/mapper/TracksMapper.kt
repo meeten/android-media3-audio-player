@@ -28,7 +28,8 @@ fun TrackDto.toTrack(): Track {
         title = title,
         duration = duration,
         artist = artistDto.name ?: UNKNOWN_ARTIST,
-        uri = preview
+        uri = preview,
+        isPreview = true
     )
 }
 
