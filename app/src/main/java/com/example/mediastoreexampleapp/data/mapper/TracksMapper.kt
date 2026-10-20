@@ -17,7 +17,7 @@ fun Cursor.toTrack(): Track {
         id = id,
         title = title,
         artist = artist,
-        duration = duration,
+        durationMs = duration,
         uri = uri.toString()
     )
 }
@@ -26,7 +26,7 @@ fun TrackDto.toTrack(): Track {
     return Track(
         id = id,
         title = title,
-        duration = duration,
+        durationMs = durationSeconds * MILLIS_PER_SECOND,
         artist = artistDto.name ?: UNKNOWN_ARTIST,
         uri = preview,
         isPreview = true
@@ -34,3 +34,4 @@ fun TrackDto.toTrack(): Track {
 }
 
 private const val UNKNOWN_ARTIST = "Unknown"
+private const val MILLIS_PER_SECOND = 1_000

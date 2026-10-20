@@ -4,7 +4,7 @@ data class Track(
     val id: Long,
     val title: String,
     val artist: String,
-    val duration: Long,
-    val uri: String
+    val durationMs: Long,
+    val uri: String,
     val isPreview: Boolean = false
 )
