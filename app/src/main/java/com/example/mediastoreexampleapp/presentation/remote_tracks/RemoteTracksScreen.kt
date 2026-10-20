@@ -26,36 +26,34 @@ fun RemoteTracksScreen(
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-    Column(modifier = modifier) {
-        when (val currentState = uiState.value) {
-            RemoteTracksScreenState.Loading -> {
-                Loading()
-            }
+    when (val currentState = uiState.value) {
+        RemoteTracksScreenState.Loading -> {
+            Loading()
+        }
 
-            is RemoteTracksScreenState.Content -> {
-                TracksScreenContent(
-                    modifier = modifier,
-                    tracks = currentState.tracks,
-                    onTrackClick = { track ->
-                        onTrackClick(currentState.tracks, track)
-                    }
+        is RemoteTracksScreenState.Content -> {
+            TracksScreenContent(
+                modifier = modifier,
+                tracks = currentState.tracks,
+                onTrackClick = { track ->
+                    onTrackClick(currentState.tracks, track)
+                }
+            )
+        }
+
+        is RemoteTracksScreenState.Failure -> {
+            Column {
+                Text(
+                    text = currentState.message ?: stringResource(R.string.unknown_error),
+                    fontSize = 24.sp
                 )
-            }
 
-            is RemoteTracksScreenState.Failure -> {
-                Column {
-                    Text(
-                        text = currentState.message ?: stringResource(R.string.unknown_error),
-                        fontSize = 24.sp
-                    )
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(onClick = {
-                        viewModel.retry()
-                    }) {
-                        Text(text = stringResource(R.string.retry))
-                    }
+                Button(onClick = {
+                    viewModel.retry()
+                }) {
+                    Text(text = stringResource(R.string.retry))
                 }
             }
         }
