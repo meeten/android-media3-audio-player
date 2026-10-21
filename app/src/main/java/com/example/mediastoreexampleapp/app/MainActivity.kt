@@ -9,8 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.mediastoreexampleapp.navigation.AppNavGraph
-import com.example.mediastoreexampleapp.navigation.rememberNavigationState
+import com.example.mediastoreexampleapp.app.bottomnavigation.AppNavigationBottomBar
+import com.example.mediastoreexampleapp.app.navigation.AppNavGraph
+import com.example.mediastoreexampleapp.app.navigation.rememberNavigationState
 import com.example.mediastoreexampleapp.presentation.local_tracks.LocalTracksScreen
 import com.example.mediastoreexampleapp.presentation.player.PlayerScreen
 import com.example.mediastoreexampleapp.presentation.remote_tracks.RemoteTracksScreen
@@ -27,7 +28,9 @@ class MainActivity : ComponentActivity() {
                 val viewModel: MainViewModel = hiltViewModel()
                 val navigationState = rememberNavigationState()
 
-                Scaffold { innerPadding ->
+                Scaffold(
+                    bottomBar = { AppNavigationBottomBar(navigationState) }
+                ) { innerPadding ->
                     Box(
                         modifier = Modifier.padding(innerPadding)
                     ) {

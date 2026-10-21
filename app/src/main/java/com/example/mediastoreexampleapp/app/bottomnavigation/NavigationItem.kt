@@ -1,0 +1,23 @@
+package com.example.mediastoreexampleapp.app.bottomnavigation
+
+import com.example.mediastoreexampleapp.R
+import com.example.mediastoreexampleapp.app.navigation.Screen
+
+sealed class NavigationItem(
+    val screen: Screen,
+    val titleResId: Int,
+    val src: Int
+) {
+
+    object LocalTracks : NavigationItem(
+        screen = Screen.LocalTracks,
+        titleResId = R.string.local_tracks,
+        src = R.drawable.ic_favorite
+    )
+
+    object RemoteTracks : NavigationItem(
+        screen = Screen.RemoteTracks,
+        titleResId = R.string.remote_tracks,
+        src = R.drawable.ic_queue_music
+    )
+}
