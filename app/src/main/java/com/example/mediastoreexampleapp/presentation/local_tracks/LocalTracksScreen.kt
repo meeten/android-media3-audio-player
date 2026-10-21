@@ -40,15 +40,16 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.core.Loading
+import com.example.mediastoreexampleapp.core.SearchBarCustom
 import com.example.mediastoreexampleapp.core.TracksScreenContent
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.presentation.local_tracks.model.TracksScreenState
 
 @Composable
-fun TracksScreen(
+fun LocalTracksScreen(
     modifier: Modifier = Modifier,
     onTrackClick: (List<Track>, Track) -> Unit,
-    viewModel: TracksViewModel = hiltViewModel()
+    viewModel: LocalTracksViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -62,13 +63,19 @@ fun TracksScreen(
         }
 
         is TracksScreenState.Content -> {
-            TracksScreenContent(
-                modifier = modifier,
-                tracks = currentState.tracks,
-                onTrackClick = { track ->
-                    onTrackClick(currentState.tracks, track)
-                }
-            )
+            Column(modifier) {
+                SearchBarCustom(
+                    modifier = Modifier.padding(8.dp),
+                    onSearch = viewModel::search
+                )
+
+                TracksScreenContent(
+                    tracks = currentState.tracks,
+                    onTrackClick = { track ->
+                        onTrackClick(currentState.tracks, track)
+                    }
+                )
+            }
         }
     }
 }
