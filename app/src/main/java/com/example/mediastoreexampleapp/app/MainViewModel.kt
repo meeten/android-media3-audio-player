@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp
+package com.example.mediastoreexampleapp.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

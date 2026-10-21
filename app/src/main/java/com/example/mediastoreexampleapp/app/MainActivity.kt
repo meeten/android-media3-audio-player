@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp
+package com.example.mediastoreexampleapp.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.mediastoreexampleapp.navigation.AppNavGraph
 import com.example.mediastoreexampleapp.navigation.rememberNavigationState
-import com.example.mediastoreexampleapp.presentation.local_tracks.TracksScreen
+import com.example.mediastoreexampleapp.presentation.local_tracks.LocalTracksScreen
 import com.example.mediastoreexampleapp.presentation.player.PlayerScreen
 import com.example.mediastoreexampleapp.presentation.remote_tracks.RemoteTracksScreen
 import com.example.mediastoreexampleapp.ui.theme.MediaStoreExampleAppTheme
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                         AppNavGraph(
                             navController = navigationState.navController,
                             localTracksScreenContent = {
-                                TracksScreen(
+                                LocalTracksScreen(
                                     onTrackClick = { tracks, track ->
                                         viewModel.setPlaylistWithCurrentTrack(tracks, track)
                                         navigationState.navigateToPlayer()

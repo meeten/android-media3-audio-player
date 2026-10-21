@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp
+package com.example.mediastoreexampleapp.app
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
