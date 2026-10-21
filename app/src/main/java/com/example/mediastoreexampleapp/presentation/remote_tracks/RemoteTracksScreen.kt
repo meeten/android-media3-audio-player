@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.core.Loading
+import com.example.mediastoreexampleapp.core.SearchBarCustom
 import com.example.mediastoreexampleapp.core.TracksScreenContent
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksScreenState
@@ -33,13 +35,20 @@ fun RemoteTracksScreen(
         }
 
         is RemoteTracksScreenState.Content -> {
-            TracksScreenContent(
-                modifier = modifier,
-                tracks = currentState.tracks,
-                onTrackClick = { track ->
-                    onTrackClick(currentState.tracks, track)
-                }
-            )
+            Column(modifier) {
+                SearchBarCustom(
+                    modifier = Modifier.padding(8.dp),
+                    onSearch = viewModel::search,
+                )
+
+                TracksScreenContent(
+                    tracks = currentState.tracks,
+
+                    onTrackClick = { track ->
+                        onTrackClick(currentState.tracks, track)
+                    }
+                )
+            }
         }
 
         is RemoteTracksScreenState.Failure -> {

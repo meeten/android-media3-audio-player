@@ -16,4 +16,9 @@ class RemoteAudioRepositoryImpl @Inject constructor(
         val response = apiService.loadTracks()
         return response.tracks.data.map { it.toTrack() }
     }
+
+    override suspend fun search(query: String): List<Track> {
+        val dataDto = apiService.search(query)
+        return dataDto.data.map { it.toTrack() }
+    }
 }
