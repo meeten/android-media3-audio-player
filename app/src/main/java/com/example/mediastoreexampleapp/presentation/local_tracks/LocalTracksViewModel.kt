@@ -2,25 +2,32 @@ package com.example.mediastoreexampleapp.presentation.local_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.usecase.SearchLocalAudioUseCase
 import com.example.mediastoreexampleapp.presentation.local_tracks.model.TracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class LocalTracksViewModel @Inject constructor(
-    private val repository: LocalAudioRepository,
     private val searchLocalAudioUseCase: SearchLocalAudioUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<TracksScreenState>(TracksScreenState.PermissionRequired)
     val uiState = _uiState.asStateFlow()
+
+    private val queryFlow = MutableStateFlow("")
 
     private var tracksJob: Job? = null
     fun getTracks() {
@@ -28,16 +35,19 @@ class LocalTracksViewModel @Inject constructor(
 
         tracksJob = viewModelScope.launch {
             _uiState.value = TracksScreenState.Loading
-            repository.tracksFlow.collect { tracks ->
-                _uiState.value = TracksScreenState.Content(tracks)
-            }
+
+            queryFlow.map { it.trim() }
+                .distinctUntilChanged()
+                .debounce(600.milliseconds)
+                .flatMapLatest { query ->
+                    searchLocalAudioUseCase(query)
+                }.collect { tracks ->
+                    _uiState.value = TracksScreenState.Content(tracks)
+                }
         }
     }
 
-    fun search(query: String) {
-        viewModelScope.launch {
-            val tracks = searchLocalAudioUseCase(query).first()
-            _uiState.value = TracksScreenState.Content(tracks)
-        }
+    fun onQueryChange(value: String) {
+        queryFlow.value = value
     }
 }

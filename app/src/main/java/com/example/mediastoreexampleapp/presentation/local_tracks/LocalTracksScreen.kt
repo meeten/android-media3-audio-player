@@ -66,7 +66,7 @@ fun LocalTracksScreen(
             Column(modifier) {
                 SearchBarCustom(
                     modifier = Modifier.padding(8.dp),
-                    onSearch = viewModel::search
+                    onSearch = viewModel::onQueryChange
                 )
 
                 TracksScreenContent(
