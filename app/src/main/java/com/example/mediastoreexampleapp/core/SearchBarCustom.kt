@@ -53,7 +53,7 @@ fun SearchBarCustom(
 
 @Preview(showBackground = true)
 @Composable
-fun SearchBarCustomPreview() {
+private fun SearchBarCustomPreview() {
     SearchBarCustom(
         modifier = Modifier.padding(8.dp),
         onSearch = {},
