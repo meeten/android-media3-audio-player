@@ -5,6 +5,7 @@ data class Track(
     val title: String,
     val artist: String,
     val durationMs: Long,
-    val uri: String,
+    val trackUri: String,
+    val imageUrl: String?,
     val isPreview: Boolean = false
 )

@@ -3,6 +3,8 @@ package com.example.mediastoreexampleapp.data.mapper
 import android.content.ContentUris
 import android.database.Cursor
 import android.provider.MediaStore
+import androidx.core.database.getLongOrNull
+import androidx.core.net.toUri
 import com.example.mediastoreexampleapp.data.network.model.TrackDto
 import com.example.mediastoreexampleapp.domain.model.Track
 
@@ -11,14 +13,19 @@ fun Cursor.toTrack(): Track {
     val title = getString(getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))
     val artist = getString(getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
     val duration = getLong(getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
-    val uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id)
+    val trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id)
+    val albumId = getLongOrNull(getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID))
+    val imageUri =
+        if (albumId == null) null
+        else ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId)
 
     return Track(
         id = id,
         title = title,
         artist = artist,
         durationMs = duration,
-        uri = uri.toString()
+        trackUri = trackUri.toString(),
+        imageUrl = imageUri?.toString()
     )
 }
 
@@ -28,8 +35,9 @@ fun TrackDto.toTrack(): Track {
         title = title,
         durationMs = durationSeconds * MILLIS_PER_SECOND,
         artist = artistDto.name ?: UNKNOWN_ARTIST,
-        uri = preview,
-        isPreview = true
+        trackUri = preview,
+        imageUrl = artistDto.imageUrl,
+        isPreview = true,
     )
 }
 

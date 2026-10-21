@@ -1,5 +1,6 @@
 package com.example.mediastoreexampleapp.data.playback
 
+import android.net.Uri
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -60,11 +61,12 @@ class PlayerControllerImpl @Inject constructor(
             playlist.map {
                 MediaItem.Builder()
                     .setMediaId(it.id.toString())
-                    .setUri(it.uri.toUri())
+                    .setUri(it.trackUri.toUri())
                     .setMediaMetadata(
                         MediaMetadata.Builder()
                             .setTitle(it.title)
                             .setArtist(it.artist)
+                            .setArtworkUri(Uri.parse(it.imageUrl))
                             .setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC)
                             .build()
                     )
