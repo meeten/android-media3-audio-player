@@ -11,4 +11,5 @@
     <string name="unknown_error">Unknown error</string>
     <string name="retry">Повторить</string>
     <string name="demo_30_sec">Демо: 30 сек</string>
+    <string name="search_tracks">Search tracks</string>
 </resources>
