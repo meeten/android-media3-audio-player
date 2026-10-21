@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface LocalAudioRepository {
 
-    val tracksFlow: StateFlow<List<Track>>
+    val tracksFlow: StateFlow<List<Track>?>
 }

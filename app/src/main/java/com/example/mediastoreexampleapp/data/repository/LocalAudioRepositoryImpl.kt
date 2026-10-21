@@ -14,9 +14,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -38,7 +36,7 @@ class LocalAudioRepositoryImpl @Inject constructor(
         MediaStore.Audio.Media.ALBUM_ID
     )
 
-    override val tracksFlow: StateFlow<List<Track>> = callbackFlow {
+    override val tracksFlow: StateFlow<List<Track>?> = callbackFlow {
         val callback = object : ContentObserver(null) {
             override fun onChange(selfChange: Boolean) {
                 super.onChange(selfChange)
@@ -61,8 +59,8 @@ class LocalAudioRepositoryImpl @Inject constructor(
         loadTracks()
     }.flowOn(Dispatchers.IO).stateIn(
         scope = coroutineScope,
-        started = SharingStarted.Lazily,
-        initialValue = emptyList()
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
     )
 
     private fun loadTracks(): List<Track> {

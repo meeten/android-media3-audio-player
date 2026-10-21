@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
@@ -34,15 +35,16 @@ class LocalTracksViewModel @Inject constructor(
         if (tracksJob?.isActive == true) return
 
         tracksJob = viewModelScope.launch {
-            _uiState.value = TracksScreenState.Loading
-
             queryFlow.map { it.trim() }
                 .distinctUntilChanged()
-                .debounce(600.milliseconds)
+                .debounce { query ->
+                    if (query.isEmpty()) Duration.ZERO else 600.milliseconds
+                }
                 .flatMapLatest { query ->
                     searchLocalAudioUseCase(query)
                 }.collect { tracks ->
-                    _uiState.value = TracksScreenState.Content(tracks)
+                    _uiState.value = tracks?.let { TracksScreenState.Content(tracks) }
+                        ?: TracksScreenState.Loading
                 }
         }
     }
