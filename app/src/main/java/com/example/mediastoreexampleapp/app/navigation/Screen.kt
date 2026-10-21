@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.navigation
+package com.example.mediastoreexampleapp.app.navigation
 
 sealed class Screen(val route: String) {
 
