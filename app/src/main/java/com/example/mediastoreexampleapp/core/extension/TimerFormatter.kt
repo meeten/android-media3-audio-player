@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.player.extension
+package com.example.mediastoreexampleapp.core.extension
 
 import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds

@@ -31,7 +31,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.presentation.player.extension.toTimeString
+import com.example.mediastoreexampleapp.core.extension.toTimeString
 
 
 @OptIn(ExperimentalMaterial3Api::class)

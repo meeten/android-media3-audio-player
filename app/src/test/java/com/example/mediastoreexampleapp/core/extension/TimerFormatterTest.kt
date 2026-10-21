@@ -1,5 +1,6 @@
-package com.example.mediastoreexampleapp.presentation.player.extension
+package com.example.mediastoreexampleapp.core.extension
 
+import com.example.mediastoreexampleapp.core.extension.toTimeString
 import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Test
