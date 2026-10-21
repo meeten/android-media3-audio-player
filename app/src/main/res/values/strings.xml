@@ -12,4 +12,6 @@
     <string name="retry">Повторить</string>
     <string name="demo_30_sec">Демо: 30 сек</string>
     <string name="search_tracks">Search tracks</string>
+    <string name="local_tracks">Скачанные</string>
+    <string name="remote_tracks">Треки API</string>
 </resources>
