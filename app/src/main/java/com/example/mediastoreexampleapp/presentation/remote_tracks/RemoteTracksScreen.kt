@@ -2,6 +2,7 @@ package com.example.mediastoreexampleapp.presentation.remote_tracks
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -28,7 +29,7 @@ fun RemoteTracksScreen(
 
     when (val currentState = uiState.value) {
         RemoteTracksScreenState.Loading -> {
-            Loading()
+            Loading(modifier = Modifier.fillMaxSize())
         }
 
         is RemoteTracksScreenState.Content -> {

@@ -59,7 +59,7 @@ fun LocalTracksScreen(
         }
 
         TracksScreenState.Loading -> {
-            Loading()
+            Loading(modifier = Modifier.fillMaxSize())
         }
 
         is TracksScreenState.Content -> {
