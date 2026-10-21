@@ -12,7 +12,7 @@ sealed class NavigationItem(
     object LocalTracks : NavigationItem(
         screen = Screen.LocalTracks,
         titleResId = R.string.local_tracks,
-        src = R.drawable.ic_favorite
+        src = R.drawable.ic_download
     )
 
     object RemoteTracks : NavigationItem(
