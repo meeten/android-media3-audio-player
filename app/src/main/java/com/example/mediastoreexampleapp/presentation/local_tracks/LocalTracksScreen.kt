@@ -43,7 +43,7 @@ import com.example.mediastoreexampleapp.core.Loading
 import com.example.mediastoreexampleapp.core.SearchBarCustom
 import com.example.mediastoreexampleapp.core.TracksScreenContent
 import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.presentation.local_tracks.model.TracksScreenState
+import com.example.mediastoreexampleapp.presentation.local_tracks.model.LocalTracksScreenState
 
 @Composable
 fun LocalTracksScreen(
@@ -55,15 +55,15 @@ fun LocalTracksScreen(
     val query = viewModel.queryFlow.collectAsStateWithLifecycle()
 
     when (val currentState = uiState.value) {
-        TracksScreenState.PermissionRequired -> {
+        LocalTracksScreenState.PermissionRequired -> {
             RequestAudioPermission(viewModel::getTracks)
         }
 
-        TracksScreenState.Loading -> {
+        LocalTracksScreenState.Loading -> {
             Loading(modifier = Modifier.fillMaxSize())
         }
 
-        is TracksScreenState.Content -> {
+        is LocalTracksScreenState.Content -> {
             Column(modifier) {
                 SearchBarCustom(
                     modifier = Modifier.padding(8.dp),

@@ -3,7 +3,7 @@ package com.example.mediastoreexampleapp.presentation.local_tracks
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mediastoreexampleapp.domain.usecase.SearchLocalAudioUseCase
-import com.example.mediastoreexampleapp.presentation.local_tracks.model.TracksScreenState
+import com.example.mediastoreexampleapp.presentation.local_tracks.model.LocalTracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -25,7 +25,7 @@ class LocalTracksViewModel @Inject constructor(
     private val searchLocalAudioUseCase: SearchLocalAudioUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<TracksScreenState>(TracksScreenState.PermissionRequired)
+    private val _uiState = MutableStateFlow<LocalTracksScreenState>(LocalTracksScreenState.PermissionRequired)
     val uiState = _uiState.asStateFlow()
 
     private val _queryFlow = MutableStateFlow("")
@@ -46,8 +46,8 @@ class LocalTracksViewModel @Inject constructor(
                 }.collect { tracks ->
                     _uiState.value =
                         tracks?.let {
-                            TracksScreenState.Content(tracks = tracks)
-                        } ?: TracksScreenState.Loading
+                            LocalTracksScreenState.Content(tracks = tracks)
+                        } ?: LocalTracksScreenState.Loading
                 }
         }
     }
