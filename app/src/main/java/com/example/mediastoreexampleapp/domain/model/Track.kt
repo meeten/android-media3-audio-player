@@ -8,4 +8,5 @@ data class Track(
     val trackUri: String,
     val imageUrl: String?,
     val isPreview: Boolean = false
+    val isPreview: Boolean,
 )

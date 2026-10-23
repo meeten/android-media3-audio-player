@@ -26,6 +26,8 @@ fun Cursor.toTrack(): Track {
         durationMs = duration,
         trackUri = trackUri.toString(),
         imageUrl = imageUri?.toString()
+        imageUrl = imageUri?.toString(),
+        isPreview = false,
     )
 }
 
