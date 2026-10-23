@@ -28,6 +28,7 @@ fun RemoteTracksScreen(
     onTrackClick: (List<Track>, Track) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val query = viewModel.queryFlow.collectAsStateWithLifecycle()
 
     when (val currentState = uiState.value) {
         RemoteTracksScreenState.Loading -> {
@@ -38,12 +39,12 @@ fun RemoteTracksScreen(
             Column(modifier) {
                 SearchBarCustom(
                     modifier = Modifier.padding(8.dp),
-                    onSearch = viewModel::onChangeQuery,
+                    query = query.value,
+                    onSearch = viewModel::onChangeQuery
                 )
 
                 TracksScreenContent(
                     tracks = currentState.tracks,
-
                     onTrackClick = { track ->
                         onTrackClick(currentState.tracks, track)
                     }

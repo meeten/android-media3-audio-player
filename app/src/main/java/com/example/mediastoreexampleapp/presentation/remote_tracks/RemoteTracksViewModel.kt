@@ -11,6 +11,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -26,10 +27,11 @@ import kotlin.time.Duration.Companion.milliseconds
 class RemoteTracksViewModel @Inject constructor(
     private val remoteAudioRepository: RemoteAudioRepository,
 ) : ViewModel() {
-    private val queryFlow = MutableStateFlow("")
+    private val _queryFlow = MutableStateFlow("")
+    val queryFlow = _queryFlow.asStateFlow()
     private val retryTrigger = MutableStateFlow(0)
 
-    private val debounceQuery = queryFlow
+    private val debounceQuery = _queryFlow
         .map { it.trim() }
         .distinctUntilChanged()
         .debounce(600.milliseconds)
@@ -45,7 +47,7 @@ class RemoteTracksViewModel @Inject constructor(
     )
 
     fun onChangeQuery(query: String) {
-        queryFlow.value = query
+        _queryFlow.value = query
     }
 
     fun retry() {
@@ -58,7 +60,7 @@ class RemoteTracksViewModel @Inject constructor(
                 val tracks =
                     if (query.isEmpty()) remoteAudioRepository.getTracks()
                     else remoteAudioRepository.search(query)
-                RemoteTracksScreenState.Content(tracks)
+                RemoteTracksScreenState.Content(tracks = tracks)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

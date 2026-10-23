@@ -28,14 +28,15 @@ class LocalTracksViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<TracksScreenState>(TracksScreenState.PermissionRequired)
     val uiState = _uiState.asStateFlow()
 
-    private val queryFlow = MutableStateFlow("")
+    private val _queryFlow = MutableStateFlow("")
+    val queryFlow = _queryFlow.asStateFlow()
 
     private var tracksJob: Job? = null
     fun getTracks() {
         if (tracksJob?.isActive == true) return
 
         tracksJob = viewModelScope.launch {
-            queryFlow.map { it.trim() }
+            _queryFlow.map { it.trim() }
                 .distinctUntilChanged()
                 .debounce { query ->
                     if (query.isEmpty()) Duration.ZERO else 600.milliseconds
@@ -43,13 +44,15 @@ class LocalTracksViewModel @Inject constructor(
                 .flatMapLatest { query ->
                     searchLocalAudioUseCase(query)
                 }.collect { tracks ->
-                    _uiState.value = tracks?.let { TracksScreenState.Content(tracks) }
-                        ?: TracksScreenState.Loading
+                    _uiState.value =
+                        tracks?.let {
+                            TracksScreenState.Content(tracks = tracks)
+                        } ?: TracksScreenState.Loading
                 }
         }
     }
 
     fun onQueryChange(value: String) {
-        queryFlow.value = value
+        _queryFlow.value = value
     }
 }

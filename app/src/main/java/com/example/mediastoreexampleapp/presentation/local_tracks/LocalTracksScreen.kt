@@ -52,6 +52,7 @@ fun LocalTracksScreen(
     viewModel: LocalTracksViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val query = viewModel.queryFlow.collectAsStateWithLifecycle()
 
     when (val currentState = uiState.value) {
         TracksScreenState.PermissionRequired -> {
@@ -66,6 +67,7 @@ fun LocalTracksScreen(
             Column(modifier) {
                 SearchBarCustom(
                     modifier = Modifier.padding(8.dp),
+                    query = query.value,
                     onSearch = viewModel::onQueryChange
                 )
 
