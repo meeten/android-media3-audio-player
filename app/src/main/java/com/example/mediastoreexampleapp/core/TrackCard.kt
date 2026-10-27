@@ -51,16 +51,8 @@ fun TrackCard(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                SubcomposeAsyncImage(
-                    model = imageUrl,
-                    contentDescription = null,
-                    loading = { Loading(modifier = Modifier.size(48.dp)) },
-                    error = {
-                        Image(
-                            painter = painterResource(R.drawable.ic_track_placeholder),
-                            contentDescription = null
-                        )
-                    },
+                LoadingImage(
+                    imageUrl = imageUrl,
                     modifier = Modifier
                         .size(64.dp)
                         .clip(shape = RoundedCornerShape(16.dp)),

@@ -59,6 +59,7 @@ fun PlayerScreen(
 @Composable
 fun PlayerScreen(
     modifier: Modifier = Modifier,
+    imageUrl: String? = null,
     currentTrack: Track?,
     playbackDurationMs: Long,
     isPlaying: Boolean,
