@@ -2,6 +2,7 @@ package com.example.mediastoreexampleapp.core
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +34,9 @@ fun TrackCard(
     imageUrl: String?,
     title: String,
     artist: String,
-    duration: String
+    duration: String,
+    isDownload: Boolean,
+    onDownload: () -> Unit
 ) {
     Card(
         modifier = modifier,
@@ -85,6 +89,17 @@ fun TrackCard(
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(text = duration)
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Icon(
+                painter =
+                    if (isDownload) painterResource(R.drawable.ic_check_circle)
+                    else painterResource(R.drawable.ic_download),
+                contentDescription = null,
+                modifier = Modifier.clickable { onDownload() },
+                tint = if (isDownload) Color.Green else Color.Gray,
+            )
         }
     }
 }
@@ -97,7 +112,9 @@ fun TrackCardPreview() {
         imageUrl = null,
         title = "Starboy",
         artist = "The Weeknd ft. Daft Punk",
-        duration = "03:50"
+        duration = "03:50",
+        isDownload = false,
+        onDownload = {}
     )
 }
 
@@ -109,7 +126,9 @@ fun TrackCardAlbumArtPreview() {
         imageUrl = null,
         title = "Blinding Lights",
         artist = "The Weeknd",
-        duration = "03:22"
+        duration = "03:22",
+        isDownload = true,
+        onDownload = {}
     )
 }
 
@@ -121,6 +140,8 @@ fun TrackCardLongTextPreview() {
         imageUrl = null,
         title = "Очень длинное название трека, которое точно не поместится в одну строку",
         artist = "Исполнитель с очень длинным именем и дополнительными словами",
-        duration = "10:59"
+        duration = "10:59",
+        isDownload = false,
+        onDownload = {}
     )
 }

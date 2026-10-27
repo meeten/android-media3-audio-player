@@ -2,6 +2,8 @@ package com.example.mediastoreexampleapp.presentation.local_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.domain.usecase.DownloadUseCase
 import com.example.mediastoreexampleapp.domain.usecase.SearchLocalAudioUseCase
 import com.example.mediastoreexampleapp.presentation.local_tracks.model.LocalTracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,10 +24,12 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class LocalTracksViewModel @Inject constructor(
-    private val searchLocalAudioUseCase: SearchLocalAudioUseCase
+    private val searchLocalAudioUseCase: SearchLocalAudioUseCase,
+    private val downloadUseCase: DownloadUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<LocalTracksScreenState>(LocalTracksScreenState.PermissionRequired)
+    private val _uiState =
+        MutableStateFlow<LocalTracksScreenState>(LocalTracksScreenState.PermissionRequired)
     val uiState = _uiState.asStateFlow()
 
     private val _queryFlow = MutableStateFlow("")
@@ -54,5 +58,11 @@ class LocalTracksViewModel @Inject constructor(
 
     fun onQueryChange(value: String) {
         _queryFlow.value = value
+    }
+
+    fun removeTrack(track: Track) {
+        viewModelScope.launch {
+            downloadUseCase(track)
+        }
     }
 }

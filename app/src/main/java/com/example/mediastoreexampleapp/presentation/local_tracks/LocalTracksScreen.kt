@@ -75,7 +75,8 @@ fun LocalTracksScreen(
                     tracks = currentState.tracks,
                     onTrackClick = { track ->
                         onTrackClick(currentState.tracks, track)
-                    }
+                    },
+                    onDownload = viewModel::removeTrack
                 )
             }
         }

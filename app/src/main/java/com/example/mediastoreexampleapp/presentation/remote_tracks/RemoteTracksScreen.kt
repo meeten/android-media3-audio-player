@@ -47,7 +47,8 @@ fun RemoteTracksScreen(
                     tracks = currentState.tracks,
                     onTrackClick = { track ->
                         onTrackClick(currentState.tracks, track)
-                    }
+                    },
+                    onDownload = viewModel::download
                 )
             }
         }

@@ -2,7 +2,10 @@ package com.example.mediastoreexampleapp.presentation.remote_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
+import com.example.mediastoreexampleapp.domain.usecase.DownloadUseCase
 import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
@@ -19,6 +22,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -26,9 +30,14 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class RemoteTracksViewModel @Inject constructor(
     private val remoteAudioRepository: RemoteAudioRepository,
+    localAudioRepository: LocalAudioRepository,
+    private val downloadUseCase: DownloadUseCase
+
 ) : ViewModel() {
     private val _queryFlow = MutableStateFlow("")
     val queryFlow = _queryFlow.asStateFlow()
+
+    private val downloadedTracksFlow = localAudioRepository.tracksFlow
     private val retryTrigger = MutableStateFlow(0)
 
     private val debounceQuery = _queryFlow
@@ -54,7 +63,13 @@ class RemoteTracksViewModel @Inject constructor(
         retryTrigger.value += 1
     }
 
-    private fun loadTracks(query: String): Flow<RemoteTracksScreenState> = flow {
+    fun download(track: Track) {
+        viewModelScope.launch {
+            downloadUseCase(track)
+        }
+    }
+
+    private fun loadTracks(query: String): Flow<RemoteTracksScreenState> = combine(flow {
         emit(
             try {
                 val tracks =
@@ -67,5 +82,19 @@ class RemoteTracksViewModel @Inject constructor(
                 RemoteTracksScreenState.Failure(message = e.message)
             }
         )
+    }, downloadedTracksFlow) { state, downloaded ->
+        val downloaded = downloaded ?: emptyList()
+        if (state is RemoteTracksScreenState.Content) {
+            val tracks =
+                state.tracks.map { track ->
+                    track.copy(
+                        isDownload = downloaded.any {
+                            it.artist == track.artist && it.title == track.title
+                        })
+                }
+            RemoteTracksScreenState.Content(tracks = tracks)
+        } else {
+            state
+        }
     }
 }

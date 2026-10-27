@@ -15,7 +15,8 @@ import com.example.mediastoreexampleapp.domain.model.Track
 fun TracksScreenContent(
     modifier: Modifier = Modifier,
     tracks: List<Track>,
-    onTrackClick: (Track) -> Unit
+    onTrackClick: (Track) -> Unit,
+    onDownload: (Track) -> Unit
 ) {
     LazyColumn(modifier) {
         items(items = tracks, key = { it.id }) { track ->
@@ -27,7 +28,9 @@ fun TracksScreenContent(
                 imageUrl = track.imageUrl,
                 title = track.title,
                 artist = track.artist,
-                duration = track.durationMs.toTimeString()
+                duration = track.durationMs.toTimeString(),
+                isDownload = track.isDownload,
+                onDownload = { onDownload(track) }
             )
         }
     }
