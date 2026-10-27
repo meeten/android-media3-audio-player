@@ -1,6 +1,6 @@
-
 package com.example.mediastoreexampleapp.data.repository
 
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.database.ContentObserver
@@ -131,8 +131,9 @@ class LocalAudioRepositoryImpl @Inject constructor(
     }
 
     override fun remove(track: Track): Boolean {
+        val uri = resolveLocalUri(track) ?: return false
         return try {
-            context.contentResolver.delete(track.trackUri.toUri(), null, null) > 0
+            context.contentResolver.delete(uri, null, null) > 0
         } catch (e: Exception) {
             Log.e("LocalAudioRepository", "Failed to delete ${track.title}", e)
             false
@@ -145,7 +146,6 @@ class LocalAudioRepositoryImpl @Inject constructor(
             AUDIO_COLUMNS,
             null,
             null,
-            "${MediaStore.Audio.Media.TITLE} ASC"
         )?.use { cursor ->
             buildList {
                 while (cursor.moveToNext()) {
@@ -215,6 +215,23 @@ class LocalAudioRepositoryImpl @Inject constructor(
         buffer[offset + 1] = ((value ushr 14) and 0x7F).toByte()
         buffer[offset + 2] = ((value ushr 7) and 0x7F).toByte()
         buffer[offset + 3] = (value and 0x7F).toByte()
+    }
+
+    private fun resolveLocalUri(track: Track): Uri? {
+        return context.contentResolver.query(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Audio.Media._ID),
+            "${MediaStore.Audio.Media.TITLE} = ? AND ${MediaStore.Audio.Media.ARTIST} = ?",
+            arrayOf(track.title, track.artist),
+            null
+        )?.use { cursor ->
+            if (cursor.moveToFirst())
+                ContentUris.withAppendedId(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
+                )
+            else null
+        }
     }
 
     private fun String.toUri(): Uri = Uri.parse(this)
