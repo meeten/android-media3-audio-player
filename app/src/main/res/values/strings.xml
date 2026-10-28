@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">MediaStoreExampleApp</string>
-    <string name="play">Play</string>
-    <string name="pause">Pause</string>
-    <string name="previous">Previous</string>
-    <string name="next">Next</string>
     <string name="audio_permission_required">Чтобы показать вашу музыку, приложению нужен доступ к аудиофайлам на устройстве.</string>
     <string name="audio_permission_description">Разрешите доступ, чтобы увидеть доступные треки.</string>
     <string name="grant_audio_permission">Разрешить доступ</string>
