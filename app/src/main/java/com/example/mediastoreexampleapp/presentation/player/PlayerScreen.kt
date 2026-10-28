@@ -1,8 +1,9 @@
 package com.example.mediastoreexampleapp.presentation.player
 
 import android.util.Log
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,28 +11,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Slider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
+import com.example.mediastoreexampleapp.core.LoadingImage
 import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.core.extension.toTimeString
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,8 +46,13 @@ fun PlayerScreen(
     PlayerScreen(
         modifier = modifier,
         currentTrack = uiState.currentTrack,
+        imageUrl = uiState.currentTrack?.imageUrl,
+        isFavorite = uiState.currentTrack?.isDownload ?: false,
+        title = uiState.currentTrack?.title ?: stringResource(R.string.unknown),
+        artist = uiState.currentTrack?.artist ?: stringResource(R.string.unknown),
         playbackDurationMs = uiState.durationMs,
         isPlaying = uiState.isPlaying,
+        onFavorite = viewModel::download,
         onPlay = viewModel::play,
         onPause = viewModel::pause,
         currentPositionMs = uiState.currentPositionMs,
@@ -56,16 +62,21 @@ fun PlayerScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerScreen(
     modifier: Modifier = Modifier,
-    imageUrl: String? = null,
     currentTrack: Track?,
+    imageUrl: String?,
+    isFavorite: Boolean,
+    title: String,
+    artist: String,
     playbackDurationMs: Long,
+    currentPositionMs: Long,
     isPlaying: Boolean,
+    onFavorite: (Track) -> Unit,
     onPlay: () -> Unit,
     onPause: () -> Unit,
-    currentPositionMs: Long,
     onChangeCurrentPosition: (Long) -> Unit,
     onNext: () -> Unit,
     onPrevious: () -> Unit,
@@ -76,83 +87,103 @@ fun PlayerScreen(
         return
     }
 
-    var sliderPosition by remember { mutableFloatStateOf(0.0f) }
-    var isSeeking by remember { mutableStateOf(false) }
-
-    LaunchedEffect(currentPositionMs) {
-        if (!isSeeking) sliderPosition = currentPositionMs.toFloat()
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp, CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onPlay,
-            enabled = !isPlaying
-        ) {
-            Text(text = stringResource(R.string.play))
-        }
-
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onPause,
-            enabled = isPlaying
-        ) {
-            Text(text = stringResource(R.string.pause))
-        }
-
-        if (currentTrack.isPreview) {
-            Text(
-                text = stringResource(R.string.demo_30_sec),
-                color = Color.Blue
-            )
-        }
-
-        Slider(
-            value = sliderPosition,
-            onValueChange = {
-                isSeeking = true
-                sliderPosition = it
-            },
-            onValueChangeFinished = {
-                onChangeCurrentPosition(sliderPosition.toLong())
-                isSeeking = false
-            },
-            enabled = playbackDurationMs > 0,
-            valueRange = 0f..if (playbackDurationMs > 0) playbackDurationMs.toFloat() else 0f
+        LoadingImage(
+            modifier = Modifier
+                .height(332.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .align(Alignment.CenterHorizontally),
+            imageUrl = imageUrl,
+            loadingProgressIndicatorSize = 332.dp
         )
 
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Text(text = currentPositionMs.toTimeString())
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(text = playbackDurationMs.toTimeString())
+            IconButton(
+                onClick = {
+                    onFavorite(currentTrack)
+                }
+            ) {
+                Image(
+                    painter =
+                        if (isFavorite) painterResource(R.drawable.ic_favorite_filled)
+                        else painterResource(R.drawable.ic_favorite),
+                    contentDescription = null,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
         }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(text = artist)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = stringResource(R.string.previous),
-                modifier = Modifier.clickable {
-                    onPrevious()
-                }
-            )
+        if (currentTrack.isPreview) {
+            Box(
+                modifier = Modifier.background(
+                    color = Color(0xFFE9E5FF),
+                    shape = RoundedCornerShape(32.dp)
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_headphones),
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = Color(0xFF6855DE)
+                    )
 
-            Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.width(4.dp))
 
-            Text(
-                text = stringResource(R.string.next),
-                modifier = Modifier.clickable {
-                    onNext()
+                    Text(
+                        text = stringResource(R.string.demo_30_sec),
+                        color = Color(0xFF6855DE),
+                        fontSize = 14.sp
+                    )
                 }
-            )
+            }
         }
+
+        Spacer(modifier = Modifier.height(2.dp))
+
+        PlayerSlider(
+            modifier = Modifier.fillMaxWidth(),
+            playbackDurationMs = playbackDurationMs,
+            onChangeCurrentPosition = onChangeCurrentPosition,
+            currentPositionMs = currentPositionMs,
+            sliderEnabled = playbackDurationMs > 0,
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        PlayerControls(
+            modifier = Modifier.fillMaxWidth(),
+            isPlaying = isPlaying,
+            onPrevious = onPrevious,
+            onPause = onPause,
+            onPlay = onPlay,
+            onNext = onNext
+        )
     }
 }
