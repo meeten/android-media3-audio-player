@@ -1,7 +1,6 @@
 package com.example.mediastoreexampleapp.core
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.SubcomposeAsyncImage
 import com.example.mediastoreexampleapp.R
 
 @Composable
@@ -52,10 +50,11 @@ fun TrackCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 LoadingImage(
-                    imageUrl = imageUrl,
                     modifier = Modifier
                         .size(64.dp)
                         .clip(shape = RoundedCornerShape(16.dp)),
+                    imageUrl = imageUrl,
+                    loadingProgressIndicatorSize = 48.dp
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
