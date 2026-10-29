@@ -130,8 +130,6 @@ fun PlayerScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(4.dp))
-
         Text(text = artist)
 
         Spacer(modifier = Modifier.height(8.dp))
