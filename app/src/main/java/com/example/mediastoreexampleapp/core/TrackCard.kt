@@ -34,6 +34,7 @@ fun TrackCard(
     artist: String,
     duration: String,
     isDownload: Boolean,
+    isProcessing: Boolean,
     onDownload: () -> Unit
 ) {
     Card(
@@ -83,14 +84,18 @@ fun TrackCard(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Icon(
-                painter =
-                    if (isDownload) painterResource(R.drawable.ic_check_circle)
-                    else painterResource(R.drawable.ic_download),
-                contentDescription = null,
-                modifier = Modifier.clickable { onDownload() },
-                tint = if (isDownload) Color.Green else Color.Gray,
-            )
+            if (isProcessing) {
+                Loading(modifier = Modifier.size(24.dp))
+            } else {
+                Icon(
+                    painter =
+                        if (isDownload) painterResource(R.drawable.ic_check_circle)
+                        else painterResource(R.drawable.ic_download),
+                    contentDescription = null,
+                    modifier = Modifier.clickable { onDownload() },
+                    tint = if (isDownload) Color.Green else Color.Gray,
+                )
+            }
         }
     }
 }
@@ -105,6 +110,7 @@ fun TrackCardPreview() {
         artist = "The Weeknd ft. Daft Punk",
         duration = "03:50",
         isDownload = false,
+        isProcessing = false,
         onDownload = {}
     )
 }
@@ -118,7 +124,8 @@ fun TrackCardAlbumArtPreview() {
         title = "Blinding Lights",
         artist = "The Weeknd",
         duration = "03:22",
-        isDownload = true,
+        isDownload = false,
+        isProcessing = true,
         onDownload = {}
     )
 }
@@ -132,7 +139,8 @@ fun TrackCardLongTextPreview() {
         title = "Очень длинное название трека, которое точно не поместится в одну строку",
         artist = "Исполнитель с очень длинным именем и дополнительными словами",
         duration = "10:59",
-        isDownload = false,
+        isDownload = true,
+        isProcessing = false,
         onDownload = {}
     )
 }

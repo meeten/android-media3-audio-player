@@ -30,6 +30,7 @@ fun TracksScreenContent(
                 artist = track.artist,
                 duration = track.durationMs.toTimeString(),
                 isDownload = track.isDownload,
+                isProcessing = track.isDownloading,
                 onDownload = { onDownload(track) }
             )
         }

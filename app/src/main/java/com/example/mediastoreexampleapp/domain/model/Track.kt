@@ -8,5 +8,6 @@ data class Track(
     val trackUri: String,
     val imageUrl: String?,
     val isPreview: Boolean,
-    val isDownload: Boolean
+    val isDownload: Boolean,
+    val isDownloading: Boolean = false,
 )
