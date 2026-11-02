@@ -2,6 +2,8 @@ package com.example.mediastoreexampleapp.data.mapper
 
 import android.content.ContentUris
 import android.database.Cursor
+import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import androidx.core.database.getLongOrNull
 import com.example.mediastoreexampleapp.data.network.model.TrackDto
@@ -18,8 +20,15 @@ fun Cursor.toTrack(): Track {
     val trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id)
     val albumId = getLongOrNull(getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID))
     val imageUri =
-        if (albumId == null) null
-        else ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, albumId)
+        if (albumId == null || albumId <= 0) null
+        else ContentUris.withAppendedId(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
+            } else {
+                Uri.parse("content://media/external/audio/albumart")
+            },
+            albumId
+        )
     return Track(
         id = id,
         title = title,

@@ -4,12 +4,15 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.database.ContentObserver
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import com.example.mediastoreexampleapp.core.extension.toTrackKey
+import com.example.mediastoreexampleapp.data.audio.ArtworkDownloader
+import com.example.mediastoreexampleapp.data.audio.Mp3MetadataWriter
 import com.example.mediastoreexampleapp.data.mapper.toTrack
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.domain.model.TrackKey
@@ -20,6 +23,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,8 +38,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,6 +47,7 @@ import javax.inject.Singleton
 class LocalAudioRepositoryImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     coroutineScope: CoroutineScope,
+    private val artworkDownloader: ArtworkDownloader,
 ) : LocalAudioRepository {
 
     private val _operationsFlow = MutableStateFlow<Map<TrackKey, TrackOperation>>(emptyMap())
@@ -96,7 +100,8 @@ class LocalAudioRepositoryImpl @Inject constructor(
             } catch (e: CancellationException) {
                 uri?.let { deleteAudio(it) }
                 throw e
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                Log.e("LocalAudioRepository", "Failed to download ${track.title}", e)
                 uri?.let { deleteAudio(it) }
                 false
             } finally {
@@ -123,6 +128,7 @@ class LocalAudioRepositoryImpl @Inject constructor(
             put(MediaStore.Audio.Media.DISPLAY_NAME, "${track.title}.mp3")
             put(MediaStore.Audio.Media.TITLE, track.title)
             put(MediaStore.Audio.Media.ARTIST, track.artist)
+            put(MediaStore.Audio.Media.ALBUM, albumName(track))
             put(MediaStore.Audio.Media.MIME_TYPE, MIME_TYPE)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -140,13 +146,31 @@ class LocalAudioRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun downloadAudio(track: Track, uri: Uri) {
-        URL(track.trackUri).openStream().use { input ->
-            context.contentResolver.openOutputStream(uri)?.use { output ->
-                output.write(buildId3Tag(track.title, track.artist))
-                copyAudio(input, output)
+    private suspend fun downloadAudio(track: Track, uri: Uri) {
+        val coroutineContext = currentCoroutineContext()
+        val artwork = try {
+            artworkDownloader.download(track.imageUrl)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            coroutineContext.ensureActive()
+            Log.w("LocalAudioRepository", "Saving ${track.title} without artwork", e)
+            null
+        }
+        coroutineContext.ensureActive()
+        val connection = URL(track.trackUri).openConnection().apply {
+            connectTimeout = 15_000
+            readTimeout = 15_000
+        }
+        connection.getInputStream().use { input ->
+            context.contentResolver.openOutputStream(uri, "w")?.use { output ->
+                Mp3MetadataWriter.write(
+                    input, output, track.title, track.artist, albumName(track), artwork,
+                    checkCancellation = { coroutineContext.ensureActive() }
+                )
             } ?: throw IOException("Cannot open output stream")
         }
+        coroutineContext.ensureActive()
     }
 
     private fun publishAudio(uri: Uri) {
@@ -155,7 +179,18 @@ class LocalAudioRepositoryImpl @Inject constructor(
                 put(MediaStore.Audio.Media.IS_PENDING, 0)
             }
 
-            context.contentResolver.update(uri, values, null, null)
+            if (context.contentResolver.update(uri, values, null, null) == 0) {
+                throw IOException("Cannot publish audio: $uri")
+            }
+        } else {
+            // Before Android 10, publication does not trigger the pending-file scan.
+            @Suppress("DEPRECATION")
+            val path = context.contentResolver.query(
+                uri, arrayOf(MediaStore.Audio.Media.DATA), null, null, null
+            )?.use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
+            if (path != null) {
+                MediaScannerConnection.scanFile(context, arrayOf(path), arrayOf(MIME_TYPE), null)
+            }
         }
     }
 
@@ -163,7 +198,7 @@ class LocalAudioRepositoryImpl @Inject constructor(
         try {
             context.contentResolver.delete(uri, null, null)
         } catch (e: Exception) {
-            Log.e("LocalAudioRepository", e.message ?: "Unknown error")
+            Log.e("LocalAudioRepository", "Failed to clean up $uri", e)
         }
     }
 
@@ -182,67 +217,8 @@ class LocalAudioRepositoryImpl @Inject constructor(
         } ?: emptyList()
     }
 
-    private fun copyAudio(input: InputStream, output: OutputStream) {
-        val buffer = ByteArray(BUFFER_SIZE)
-
-        while (true) {
-            val count = input.read(buffer)
-            if (count == -1) break
-            output.write(buffer, 0, count)
-        }
-    }
-
-    private fun buildId3Tag(title: String, artist: String): ByteArray {
-        val frames = listOf(
-            buildTextFrame("TIT2", title),
-            buildTextFrame("TPE1", artist)
-        )
-
-        val bodySize = frames.sumOf { it.size }
-        val tag = ByteArray(10 + bodySize)
-
-        tag[0] = 'I'.code.toByte()
-        tag[1] = 'D'.code.toByte()
-        tag[2] = '3'.code.toByte()
-        tag[3] = 3
-        tag[4] = 0
-        tag[5] = 0
-        writeSyncSafeInt(tag, 6, bodySize)
-
-        var offset = 10
-        frames.forEach { frame ->
-            frame.copyInto(tag, offset)
-            offset += frame.size
-        }
-
-        return tag
-    }
-
-    private fun buildTextFrame(id: String, value: String): ByteArray {
-        val text = value.toByteArray(Charsets.UTF_8)
-        val content = byteArrayOf(3) + text
-        val frame = ByteArray(10 + content.size)
-
-        id.toByteArray(Charsets.US_ASCII).copyInto(frame)
-        writeInt(frame, 4, content.size)
-        content.copyInto(frame, 10)
-
-        return frame
-    }
-
-    private fun writeInt(buffer: ByteArray, offset: Int, value: Int) {
-        buffer[offset] = (value ushr 24).toByte()
-        buffer[offset + 1] = (value ushr 16).toByte()
-        buffer[offset + 2] = (value ushr 8).toByte()
-        buffer[offset + 3] = value.toByte()
-    }
-
-    private fun writeSyncSafeInt(buffer: ByteArray, offset: Int, value: Int) {
-        buffer[offset] = ((value ushr 21) and 0x7F).toByte()
-        buffer[offset + 1] = ((value ushr 14) and 0x7F).toByte()
-        buffer[offset + 2] = ((value ushr 7) and 0x7F).toByte()
-        buffer[offset + 3] = (value and 0x7F).toByte()
-    }
+    // Until album metadata is supplied by the API, isolate each downloaded track's artwork.
+    private fun albumName(track: Track): String = "MediaStoreExampleApp track ${track.id}"
 
     private fun resolveLocalUri(track: Track): Uri? {
         return context.contentResolver.query(
@@ -266,7 +242,6 @@ class LocalAudioRepositoryImpl @Inject constructor(
     companion object {
         private const val MIME_TYPE = "audio/mpeg"
         private const val MY_MUSIC = "my_music"
-        private const val BUFFER_SIZE = 8 * 1024
 
         private val AUDIO_COLUMNS = arrayOf(
             MediaStore.Audio.Media._ID,
