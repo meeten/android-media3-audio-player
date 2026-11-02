@@ -9,8 +9,11 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import com.example.mediastoreexampleapp.core.extension.toTrackKey
 import com.example.mediastoreexampleapp.data.mapper.toTrack
 import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.domain.model.TrackKey
+import com.example.mediastoreexampleapp.domain.model.TrackOperation
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
@@ -18,13 +21,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
@@ -37,8 +43,12 @@ import javax.inject.Singleton
 @Singleton
 class LocalAudioRepositoryImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
 ) : LocalAudioRepository {
+
+    private val _operationsFlow = MutableStateFlow<Map<TrackKey, TrackOperation>>(emptyMap())
+    override val operationsFlow: StateFlow<Map<TrackKey, TrackOperation>> =
+        _operationsFlow.asStateFlow()
 
     override val tracksFlow: StateFlow<List<Track>?> =
         callbackFlow {
@@ -69,21 +79,44 @@ class LocalAudioRepositoryImpl @Inject constructor(
 
     override suspend fun insert(track: Track): Boolean =
         withContext(Dispatchers.IO) {
-            val uri = createAudioUri(track) ?: return@withContext false
+            val trackKey = track.toTrackKey()
+            val operations = _operationsFlow.value
 
+            if (operations[trackKey] != null) return@withContext false
+            _operationsFlow.update { currentOperations ->
+                currentOperations + mapOf(trackKey to TrackOperation.DOWNLOADING)
+            }
+
+            var uri: Uri? = null
             try {
+                uri = createAudioUri(track) ?: return@withContext false
                 downloadAudio(track, uri)
                 publishAudio(uri)
                 true
             } catch (e: CancellationException) {
-                deleteAudio(uri)
+                uri?.let { deleteAudio(it) }
                 throw e
-            } catch (e: Exception) {
-                Log.e("LocalAudioRepository", "Failed to download ${track.title}", e)
-                deleteAudio(uri)
+            } catch (_: Exception) {
+                uri?.let { deleteAudio(it) }
                 false
+            } finally {
+                _operationsFlow.update { currentOperations ->
+                    currentOperations - trackKey
+                }
             }
         }
+
+    override suspend fun remove(track: Track): Boolean = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val uri = resolveLocalUri(track) ?: return@withContext false
+            context.contentResolver.delete(uri, null, null) > 0
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e("LocalAudioRepository", "Failed to delete ${track.title}", e)
+            false
+        }
+    }
 
     private fun createAudioUri(track: Track): Uri? {
         val values = ContentValues().apply {
@@ -127,16 +160,10 @@ class LocalAudioRepositoryImpl @Inject constructor(
     }
 
     private fun deleteAudio(uri: Uri) {
-        context.contentResolver.delete(uri, null, null)
-    }
-
-    override fun remove(track: Track): Boolean {
-        val uri = resolveLocalUri(track) ?: return false
-        return try {
-            context.contentResolver.delete(uri, null, null) > 0
+        try {
+            context.contentResolver.delete(uri, null, null)
         } catch (e: Exception) {
-            Log.e("LocalAudioRepository", "Failed to delete ${track.title}", e)
-            false
+            Log.e("LocalAudioRepository", e.message ?: "Unknown error")
         }
     }
 
