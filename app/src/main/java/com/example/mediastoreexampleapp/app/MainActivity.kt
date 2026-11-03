@@ -17,14 +17,20 @@ import com.example.mediastoreexampleapp.presentation.player.PlayerScreen
 import com.example.mediastoreexampleapp.presentation.remote_tracks.RemoteTracksScreen
 import com.example.mediastoreexampleapp.ui.theme.MediaStoreExampleAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import com.example.mediastoreexampleapp.data.storage.MediaDeletionCoordinator
+import com.example.mediastoreexampleapp.presentation.deletion.MediaDeletionHost
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject lateinit var mediaDeletionCoordinator: MediaDeletionCoordinator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MediaStoreExampleAppTheme {
+                MediaDeletionHost(mediaDeletionCoordinator)
                 val viewModel: MainViewModel = hiltViewModel()
                 val navigationState = rememberNavigationState()
 

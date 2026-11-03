@@ -2,10 +2,10 @@ package com.example.mediastoreexampleapp.data.mapper
 
 import android.content.ContentUris
 import android.database.Cursor
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.core.database.getLongOrNull
+import androidx.core.net.toUri
 import com.example.mediastoreexampleapp.data.network.model.TrackDto
 import com.example.mediastoreexampleapp.domain.model.Track
 
@@ -18,6 +18,7 @@ fun Cursor.toTrack(): Track {
         ?: UNKNOWN_ARTIST
     val duration = getLong(getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
     val trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id)
+    val album = getString(getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM))
     val albumId = getLongOrNull(getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID))
     val imageUri =
         if (albumId == null || albumId <= 0) null
@@ -25,7 +26,7 @@ fun Cursor.toTrack(): Track {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
             } else {
-                Uri.parse("content://media/external/audio/albumart")
+                "content://media/external/audio/albumart".toUri()
             },
             albumId
         )
@@ -37,7 +38,10 @@ fun Cursor.toTrack(): Track {
         trackUri = trackUri.toString(),
         imageUrl = imageUri?.toString(),
         isPreview = false,
-        isDownload = true
+        isDownload = true,
+        localCopyUri = trackUri.toString(),
+        sourceRemoteId = album?.takeIf { it.startsWith("MediaStoreExampleApp track ") }
+            ?.removePrefix("MediaStoreExampleApp track ")?.toLongOrNull(),
     )
 }
 

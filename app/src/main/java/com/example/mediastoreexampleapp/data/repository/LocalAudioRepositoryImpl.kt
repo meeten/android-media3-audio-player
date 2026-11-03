@@ -1,6 +1,5 @@
 package com.example.mediastoreexampleapp.data.repository
 
-import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.database.ContentObserver
@@ -14,6 +13,8 @@ import com.example.mediastoreexampleapp.core.extension.toTrackKey
 import com.example.mediastoreexampleapp.data.audio.ArtworkDownloader
 import com.example.mediastoreexampleapp.data.audio.Mp3MetadataWriter
 import com.example.mediastoreexampleapp.data.mapper.toTrack
+import com.example.mediastoreexampleapp.data.storage.MediaDeletionCoordinator
+import com.example.mediastoreexampleapp.domain.model.RemovingResult
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.domain.model.TrackKey
 import com.example.mediastoreexampleapp.domain.model.TrackOperation
@@ -23,9 +24,9 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -48,6 +49,7 @@ class LocalAudioRepositoryImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     coroutineScope: CoroutineScope,
     private val artworkDownloader: ArtworkDownloader,
+    private val mediaDeletionCoordinator: MediaDeletionCoordinator,
 ) : LocalAudioRepository {
 
     private val _operationsFlow = MutableStateFlow<Map<TrackKey, TrackOperation>>(emptyMap())
@@ -111,16 +113,9 @@ class LocalAudioRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun remove(track: Track): Boolean = withContext(Dispatchers.IO) {
-        return@withContext try {
-            val uri = resolveLocalUri(track) ?: return@withContext false
-            context.contentResolver.delete(uri, null, null) > 0
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Log.e("LocalAudioRepository", "Failed to delete ${track.title}", e)
-            false
-        }
+    override suspend fun remove(track: Track): RemovingResult {
+        val uri = track.localCopyUri ?: if (!track.isPreview) track.trackUri else null
+        return if (uri == null) RemovingResult.NotFound else mediaDeletionCoordinator.delete(uri)
     }
 
     private fun createAudioUri(track: Track): Uri? {
@@ -183,7 +178,6 @@ class LocalAudioRepositoryImpl @Inject constructor(
                 throw IOException("Cannot publish audio: $uri")
             }
         } else {
-            // Before Android 10, publication does not trigger the pending-file scan.
             @Suppress("DEPRECATION")
             val path = context.contentResolver.query(
                 uri, arrayOf(MediaStore.Audio.Media.DATA), null, null, null
@@ -217,27 +211,7 @@ class LocalAudioRepositoryImpl @Inject constructor(
         } ?: emptyList()
     }
 
-    // Until album metadata is supplied by the API, isolate each downloaded track's artwork.
     private fun albumName(track: Track): String = "MediaStoreExampleApp track ${track.id}"
-
-    private fun resolveLocalUri(track: Track): Uri? {
-        return context.contentResolver.query(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Audio.Media._ID),
-            "${MediaStore.Audio.Media.TITLE} = ? AND ${MediaStore.Audio.Media.ARTIST} = ?",
-            arrayOf(track.title, track.artist),
-            null
-        )?.use { cursor ->
-            if (cursor.moveToFirst())
-                ContentUris.withAppendedId(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
-                )
-            else null
-        }
-    }
-
-    private fun String.toUri(): Uri = Uri.parse(this)
 
     companion object {
         private const val MIME_TYPE = "audio/mpeg"
@@ -248,6 +222,7 @@ class LocalAudioRepositoryImpl @Inject constructor(
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.ALBUM_ID
         )
     }

@@ -10,4 +10,6 @@ data class Track(
     val isPreview: Boolean,
     val isDownload: Boolean,
     val isDownloading: Boolean = false,
+    val sourceRemoteId: Long? = null,
+    val localCopyUri: String? = null,
 )

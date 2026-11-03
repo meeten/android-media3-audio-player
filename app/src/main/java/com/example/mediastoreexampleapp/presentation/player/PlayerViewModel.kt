@@ -3,6 +3,7 @@ package com.example.mediastoreexampleapp.presentation.player
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
 import com.example.mediastoreexampleapp.domain.playback.PlayerController
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.usecase.DownloadUseCase
@@ -27,12 +28,9 @@ class PlayerViewModel @Inject constructor(
             localAudioRepository.tracksFlow
         ) { playerState, tracks ->
             playerState.copy(
-                currentTrack = playerState.currentTrack?.copy(
-                    isDownload = tracks?.any { track ->
-                        playerState.currentTrack.artist == track.artist
-                                && playerState.currentTrack.title == track.title
-                    } ?: playerState.currentTrack.isDownload
-                )
+                currentTrack = playerState.currentTrack?.let { current ->
+                    if (tracks == null) current else current.withLocalAvailability(tracks)
+                }
             )
         }.stateIn(
             scope = viewModelScope,
@@ -43,7 +41,7 @@ class PlayerViewModel @Inject constructor(
 
     private var downloadJob: Job? = null
     fun download(track: Track) {
-        downloadJob?.cancel()
+        if (downloadJob?.isActive == true) return
         downloadJob = viewModelScope.launch {
             downloadUseCase(track)
         }

@@ -1,6 +1,7 @@
 package com.example.mediastoreexampleapp.domain.usecase
 
 import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.domain.model.RemovingResult
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import javax.inject.Inject
 
@@ -9,6 +10,7 @@ class DownloadUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(track: Track): Boolean {
-        return if (track.isDownload) repository.remove(track) else repository.insert(track)
+        return if (track.isDownload) repository.remove(track) == RemovingResult.Deleted
+        else repository.insert(track)
     }
 }

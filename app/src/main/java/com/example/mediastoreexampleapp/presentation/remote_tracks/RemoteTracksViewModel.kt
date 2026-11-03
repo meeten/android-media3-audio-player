@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mediastoreexampleapp.core.extension.toTrackKey
 import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
 import com.example.mediastoreexampleapp.domain.usecase.DownloadUseCase
@@ -82,11 +83,8 @@ class RemoteTracksViewModel @Inject constructor(
                 state.tracks.map { track ->
                     val trackKey = track.toTrackKey()
                     val currentOperation = operations[trackKey]
-                    track.copy(
+                    track.withLocalAvailability(downloads).copy(
                         isDownloading = currentOperation != null,
-                        isDownload = downloads.any {
-                            it.title == track.title && it.artist == track.artist
-                        },
                     )
                 }
             RemoteTracksScreenState.Content(tracks = tracks)
