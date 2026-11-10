@@ -37,6 +37,8 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.net.URL
@@ -83,14 +85,18 @@ class LocalAudioRepositoryImpl @Inject constructor(
                 initialValue = null
             )
 
+    private val insertMutex = Mutex()
     override suspend fun insert(track: Track): Boolean =
         withContext(Dispatchers.IO) {
             val trackKey = track.toTrackKey()
-            val operations = _operationsFlow.value
 
-            if (operations[trackKey] != null) return@withContext false
-            _operationsFlow.update { currentOperations ->
-                currentOperations + mapOf(trackKey to TrackOperation.DOWNLOADING)
+            insertMutex.withLock {
+                val operations = _operationsFlow.value
+
+                if (operations[trackKey] != null) return@withContext false
+                _operationsFlow.update { currentOperations ->
+                    currentOperations + mapOf(trackKey to TrackOperation.DOWNLOADING)
+                }
             }
 
             var uri: Uri? = null
