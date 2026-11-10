@@ -2,17 +2,20 @@ package com.example.mediastoreexampleapp.presentation.remote_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.core.extension.toTrackKey
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
 import com.example.mediastoreexampleapp.domain.usecase.DownloadUseCase
+import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksEvent
 import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +26,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,6 +42,9 @@ class RemoteTracksViewModel @Inject constructor(
 ) : ViewModel() {
     private val _queryFlow = MutableStateFlow("")
     val queryFlow = _queryFlow.asStateFlow()
+
+    private val _uiEvent = Channel<RemoteTracksEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     private val downloadedTracksFlow = localAudioRepository.tracksFlow
     private val operationsFlow = localAudioRepository.operationsFlow
@@ -68,7 +75,14 @@ class RemoteTracksViewModel @Inject constructor(
 
     fun download(track: Track) {
         viewModelScope.launch {
-            downloadUseCase(track)
+            val isDownloaded = downloadUseCase(track)
+            if (!isDownloaded) {
+                _uiEvent.trySend(
+                    RemoteTracksEvent.Error(
+                        messageResId = R.string.failed_to_delete_track
+                    )
+                )
+            }
         }
     }
 
