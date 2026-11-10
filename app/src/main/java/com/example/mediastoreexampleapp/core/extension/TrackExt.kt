@@ -5,7 +5,6 @@ import com.example.mediastoreexampleapp.domain.model.TrackKey
 
 fun Track.toTrackKey(): TrackKey {
     return TrackKey(
-        title = this.title,
-        artist = this.artist
+        id = id
     )
 }
