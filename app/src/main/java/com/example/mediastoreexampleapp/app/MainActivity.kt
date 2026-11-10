@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
@@ -23,7 +24,8 @@ import com.example.mediastoreexampleapp.presentation.deletion.MediaDeletionHost
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject lateinit var mediaDeletionCoordinator: MediaDeletionCoordinator
+    @Inject
+    lateinit var mediaDeletionCoordinator: MediaDeletionCoordinator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,9 @@ class MainActivity : ComponentActivity() {
                     bottomBar = { AppNavigationBottomBar(navigationState) }
                 ) { innerPadding ->
                     Box(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .consumeWindowInsets(innerPadding)
                     ) {
                         AppNavGraph(
                             navController = navigationState.navController,
