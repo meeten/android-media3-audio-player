@@ -5,7 +5,7 @@ import com.example.mediastoreexampleapp.domain.model.TrackAvailabilityResult
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import javax.inject.Inject
 
-class DownloadUseCase @Inject constructor(
+class ToggleTrackAvailabilityUseCase @Inject constructor(
     private val repository: LocalAudioRepository
 ) {
 

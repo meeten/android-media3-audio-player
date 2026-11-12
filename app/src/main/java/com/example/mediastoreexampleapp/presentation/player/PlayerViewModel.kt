@@ -6,7 +6,7 @@ import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
 import com.example.mediastoreexampleapp.domain.playback.PlayerController
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
-import com.example.mediastoreexampleapp.domain.usecase.DownloadUseCase
+import com.example.mediastoreexampleapp.domain.usecase.ToggleTrackAvailabilityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class PlayerViewModel @Inject constructor(
     private val playerController: PlayerController,
     localAudioRepository: LocalAudioRepository,
-    private val downloadUseCase: DownloadUseCase
+    private val downloadUseCase: ToggleTrackAvailabilityUseCase
 ) : ViewModel() {
 
     val uiState =

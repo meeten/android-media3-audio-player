@@ -3,7 +3,7 @@ package com.example.mediastoreexampleapp.presentation.local_tracks
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.usecase.DownloadUseCase
+import com.example.mediastoreexampleapp.domain.usecase.ToggleTrackAvailabilityUseCase
 import com.example.mediastoreexampleapp.domain.usecase.SearchLocalAudioUseCase
 import com.example.mediastoreexampleapp.presentation.local_tracks.model.LocalTracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +25,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class LocalTracksViewModel @Inject constructor(
     private val searchLocalAudioUseCase: SearchLocalAudioUseCase,
-    private val downloadUseCase: DownloadUseCase
+    private val downloadUseCase: ToggleTrackAvailabilityUseCase
 ) : ViewModel() {
 
     private val _uiState =

@@ -9,7 +9,7 @@ import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
-import com.example.mediastoreexampleapp.domain.usecase.DownloadUseCase
+import com.example.mediastoreexampleapp.domain.usecase.ToggleTrackAvailabilityUseCase
 import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksEvent
 import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +38,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class RemoteTracksViewModel @Inject constructor(
     private val remoteAudioRepository: RemoteAudioRepository,
     localAudioRepository: LocalAudioRepository,
-    private val downloadUseCase: DownloadUseCase
+    private val downloadUseCase: ToggleTrackAvailabilityUseCase
 ) : ViewModel() {
 
     private val _queryFlow = MutableStateFlow("")
