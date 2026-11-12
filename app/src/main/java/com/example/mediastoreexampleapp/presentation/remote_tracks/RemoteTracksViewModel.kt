@@ -3,7 +3,8 @@ package com.example.mediastoreexampleapp.presentation.remote_tracks
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mediastoreexampleapp.core.extension.toTrackKey
-import com.example.mediastoreexampleapp.domain.model.OperationResult
+import com.example.mediastoreexampleapp.domain.model.RemovingResult
+import com.example.mediastoreexampleapp.domain.model.TrackAvailabilityResult
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
@@ -38,8 +39,8 @@ class RemoteTracksViewModel @Inject constructor(
     private val remoteAudioRepository: RemoteAudioRepository,
     localAudioRepository: LocalAudioRepository,
     private val downloadUseCase: DownloadUseCase
-
 ) : ViewModel() {
+
     private val _queryFlow = MutableStateFlow("")
     val queryFlow = _queryFlow.asStateFlow()
 
@@ -75,17 +76,19 @@ class RemoteTracksViewModel @Inject constructor(
 
     fun download(track: Track) {
         viewModelScope.launch {
-            val downloadResult = downloadUseCase(track)
-            when (downloadResult) {
-                is OperationResult.Download.Failure -> {
-                    _uiEvent.trySend(RemoteTracksEvent.DownloadFailed)
+            when (val downloadResult = downloadUseCase(track)) {
+                is TrackAvailabilityResult.Download -> {
+                    if (!downloadResult.isSuccess) {
+                        _uiEvent.trySend(RemoteTracksEvent.DownloadFailed)
+                    }
                 }
 
-                is OperationResult.Delete.Failure -> {
-                    _uiEvent.trySend(RemoteTracksEvent.DeleteFailed)
+                is TrackAvailabilityResult.Delete -> {
+                    when (downloadResult.removingResult) {
+                        is RemovingResult.Failed -> _uiEvent.trySend(RemoteTracksEvent.DeleteFailed)
+                        else -> {}
+                    }
                 }
-
-                else -> {}
             }
         }
     }
