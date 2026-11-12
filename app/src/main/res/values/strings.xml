@@ -15,4 +15,5 @@
     <string name="track_deletion_busy">Сначала завершите подтверждение удаления</string>
     <string name="track_deletion_not_found">Локальный файл не найден</string>
     <string name="failed_to_delete_track">Не удалось удалить трек</string>
+    <string name="failed_to_download_track">Не удалось скачать трек</string>
 </resources>
