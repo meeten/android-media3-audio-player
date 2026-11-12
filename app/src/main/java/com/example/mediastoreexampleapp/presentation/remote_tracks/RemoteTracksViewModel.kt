@@ -2,8 +2,8 @@ package com.example.mediastoreexampleapp.presentation.remote_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.core.extension.toTrackKey
+import com.example.mediastoreexampleapp.domain.model.OperationResult
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
@@ -75,13 +75,17 @@ class RemoteTracksViewModel @Inject constructor(
 
     fun download(track: Track) {
         viewModelScope.launch {
-            val isDownloaded = downloadUseCase(track)
-            if (!isDownloaded) {
-                _uiEvent.trySend(
-                    RemoteTracksEvent.Error(
-                        messageResId = R.string.failed_to_delete_track
-                    )
-                )
+            val downloadResult = downloadUseCase(track)
+            when (downloadResult) {
+                is OperationResult.Download.Failure -> {
+                    _uiEvent.trySend(RemoteTracksEvent.DownloadFailed)
+                }
+
+                is OperationResult.Delete.Failure -> {
+                    _uiEvent.trySend(RemoteTracksEvent.DeleteFailed)
+                }
+
+                else -> {}
             }
         }
     }

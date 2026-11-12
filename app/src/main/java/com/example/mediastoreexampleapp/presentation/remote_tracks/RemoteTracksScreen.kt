@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,23 +38,22 @@ fun RemoteTracksScreen(
     onTrackClick: (List<Track>, Track) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    val uiEvent = viewModel.uiEvent
-    val context = LocalContext.current
+    val currentResource = rememberUpdatedState(LocalResources.current)
     val snackbarHostState = remember { SnackbarHostState() }
     val query = viewModel.queryFlow.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiEvent) {
-        uiEvent.collect {
-            when (it) {
-                is RemoteTracksEvent.Error -> {
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collect {
+            val message = when (it) {
+                is RemoteTracksEvent.DeleteFailed -> currentResource.value.getString(R.string.failed_to_delete_track)
 
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                    snackbarHostState.showSnackbar(
-                        message = context.getString(it.messageResId),
-                        withDismissAction = true
-                    )
-                }
+                is RemoteTracksEvent.DownloadFailed -> currentResource.value.getString(R.string.failed_to_download_track)
             }
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar(
+                message = message,
+                withDismissAction = true
+            )
         }
     }
 
