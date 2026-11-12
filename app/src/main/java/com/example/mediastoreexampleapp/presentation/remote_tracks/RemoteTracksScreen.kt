@@ -16,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -30,6 +29,7 @@ import com.example.mediastoreexampleapp.core.TracksScreenContent
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksEvent
 import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksScreenState
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun RemoteTracksScreen(
@@ -43,13 +43,12 @@ fun RemoteTracksScreen(
     val query = viewModel.queryFlow.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel.uiEvent) {
-        viewModel.uiEvent.collect {
+        viewModel.uiEvent.collectLatest {
             val message = when (it) {
                 is RemoteTracksEvent.DeleteFailed -> currentResource.value.getString(R.string.failed_to_delete_track)
 
                 is RemoteTracksEvent.DownloadFailed -> currentResource.value.getString(R.string.failed_to_download_track)
             }
-            snackbarHostState.currentSnackbarData?.dismiss()
             snackbarHostState.showSnackbar(
                 message = message,
                 withDismissAction = true
