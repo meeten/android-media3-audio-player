@@ -8,12 +8,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.mediastoreexampleapp.app.bottomnavigation.AppNavigationBottomBar
+import com.example.mediastoreexampleapp.app.bottomnavigation.BottomAppBarCustom
 import com.example.mediastoreexampleapp.app.navigation.AppNavGraph
 import com.example.mediastoreexampleapp.app.navigation.rememberNavigationState
 import com.example.mediastoreexampleapp.data.storage.MediaDeletionCoordinator
@@ -42,7 +40,7 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     bottomBar = {
-                        AppNavigationBottomBar(
+                        BottomAppBarCustom(
                             navigationState = navigationState,
                             currentTrack = playerState.currentTrack
                         )

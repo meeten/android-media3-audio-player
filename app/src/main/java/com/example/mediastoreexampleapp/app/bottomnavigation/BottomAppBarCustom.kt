@@ -27,7 +27,7 @@ private val navigationItems = listOf(
 
 
 @Composable
-fun AppNavigationBottomBar(
+fun BottomAppBarCustom(
     navigationState: NavigationState,
     currentTrack: Track?,
     modifier: Modifier = Modifier
