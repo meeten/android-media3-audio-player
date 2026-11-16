@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.app.bottomnavigation
+package com.example.mediastoreexampleapp.app.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,8 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.mediastoreexampleapp.app.navigation.NavigationItem
 import com.example.mediastoreexampleapp.app.navigation.NavigationState
-import com.example.mediastoreexampleapp.app.ui.MiniAudioPlayer
 import com.example.mediastoreexampleapp.domain.model.Track
 
 private val navigationItems = listOf(

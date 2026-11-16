@@ -11,7 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.mediastoreexampleapp.app.bottomnavigation.BottomAppBarCustom
+import com.example.mediastoreexampleapp.app.ui.BottomAppBarCustom
 import com.example.mediastoreexampleapp.app.navigation.AppNavGraph
 import com.example.mediastoreexampleapp.app.navigation.rememberNavigationState
 import com.example.mediastoreexampleapp.data.storage.MediaDeletionCoordinator
