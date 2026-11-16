@@ -1,7 +1,6 @@
-package com.example.mediastoreexampleapp.app.bottomnavigation
+package com.example.mediastoreexampleapp.app.navigation
 
 import com.example.mediastoreexampleapp.R
-import com.example.mediastoreexampleapp.app.navigation.Screen
 
 sealed class NavigationItem(
     val screen: Screen,
