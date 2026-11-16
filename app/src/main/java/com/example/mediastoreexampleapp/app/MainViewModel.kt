@@ -13,6 +13,8 @@ class MainViewModel @Inject constructor(
     private val playerController: PlayerController
 ) : ViewModel() {
 
+    val playerState = playerController.playerState
+
     fun setPlaylistWithCurrentTrack(tracks: List<Track>, track: Track) {
         viewModelScope.launch {
             val currentIndex = tracks.indexOfFirst { track.id == it.id }
