@@ -16,8 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mediastoreexampleapp.R
+import com.example.mediastoreexampleapp.ui.theme.MediaStoreExampleAppTheme
 
 @Composable
 fun PlayerControls(
@@ -65,5 +67,33 @@ fun PlayerControls(
                 contentDescription = null
             )
         }
+    }
+}
+
+@Preview(name = "Playing State", showBackground = true)
+@Composable
+private fun PlayerControlsPlayingPreview() {
+    MediaStoreExampleAppTheme {
+        PlayerControls(
+            isPlaying = true,
+            onPrevious = {},
+            onPause = {},
+            onPlay = {},
+            onNext = {}
+        )
+    }
+}
+
+@Preview(name = "Paused State", showBackground = true)
+@Composable
+private fun PlayerControlsPausedPreview() {
+    MediaStoreExampleAppTheme {
+        PlayerControls(
+            isPlaying = false,
+            onPrevious = {},
+            onPause = {},
+            onPlay = {},
+            onNext = {}
+        )
     }
 }
