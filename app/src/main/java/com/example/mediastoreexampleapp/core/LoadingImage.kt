@@ -12,13 +12,16 @@ import com.example.mediastoreexampleapp.R
 @Composable
 fun LoadingImage(
     modifier: Modifier,
-    loadingProgressIndicatorSize: Dp,
-    imageUrl: String?
+    imageUrl: String?,
+    loadingProgressIndicatorSize: Dp? = null,
 ) {
     SubcomposeAsyncImage(
         model = imageUrl,
         contentDescription = null,
-        loading = { Loading(modifier = Modifier.size(loadingProgressIndicatorSize)) },
+        loading = {
+            if (loadingProgressIndicatorSize != null)
+                Loading(modifier = Modifier.size(loadingProgressIndicatorSize))
+        },
         error = {
             Image(
                 painter = painterResource(R.drawable.ic_track_placeholder),
