@@ -58,9 +58,9 @@ fun BottomAppBarCustom(
 
 @Composable
 private fun MiniAudiPlayer(currentTrack: Track?, route: String?) {
-    val routes = navigationItems.map { it.screen.route }
+    val navigationRotes = navigationItems.map { it.screen.route }
 
-    if (currentTrack != null && route in routes)
+    if (currentTrack != null && route in navigationRotes)
         MiniAudioPlayer(
             modifier = Modifier
                 .fillMaxWidth()
