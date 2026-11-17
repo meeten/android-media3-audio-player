@@ -22,4 +22,28 @@ class MainViewModel @Inject constructor(
             playerController.setPlaylist(playlist = tracks, startIndex = currentIndex)
         }
     }
+
+    fun play() {
+        viewModelScope.launch {
+            playerController.play()
+        }
+    }
+
+    fun pause() {
+        viewModelScope.launch {
+            playerController.pause()
+        }
+    }
+
+    fun next() {
+        viewModelScope.launch {
+            playerController.next()
+        }
+    }
+
+    fun previous() {
+        viewModelScope.launch {
+            playerController.previous()
+        }
+    }
 }

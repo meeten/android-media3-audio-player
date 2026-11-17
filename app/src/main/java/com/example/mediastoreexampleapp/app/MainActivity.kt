@@ -42,7 +42,11 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         BottomAppBarCustom(
                             navigationState = navigationState,
-                            currentTrack = playerState.currentTrack
+                            playerState = playerState,
+                            onPrevious = viewModel::previous,
+                            onPause = viewModel::pause,
+                            onPlay = viewModel::play,
+                            onNext = viewModel::next,
                         )
                     }
                 ) { innerPadding ->

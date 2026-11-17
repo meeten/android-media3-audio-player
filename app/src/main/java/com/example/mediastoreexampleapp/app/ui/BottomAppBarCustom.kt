@@ -1,14 +1,15 @@
 package com.example.mediastoreexampleapp.app.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -18,25 +19,37 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.mediastoreexampleapp.app.navigation.NavigationItem
 import com.example.mediastoreexampleapp.app.navigation.NavigationState
-import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.domain.model.PlayerState
 
 private val navigationItems = listOf(
     NavigationItem.RemoteTracks,
     NavigationItem.LocalTracks,
 )
 
-
 @Composable
 fun BottomAppBarCustom(
     navigationState: NavigationState,
-    currentTrack: Track?,
-    modifier: Modifier = Modifier
+    playerState: PlayerState,
+    modifier: Modifier = Modifier,
+    onPrevious: () -> Unit,
+    onPause: () -> Unit,
+    onPlay: () -> Unit,
+    onNext: () -> Unit
 ) {
     val navBackStackEntry = navigationState.navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
 
     Column(modifier = modifier) {
-        MiniAudiPlayer(currentTrack = currentTrack, route = currentDestination?.route)
+        MiniAudiPlayer(
+            playerState = playerState,
+            route = currentDestination?.route,
+            playbackDurationMs = playerState.durationMs,
+            currentPositionMs = playerState.currentPositionMs,
+            onPrevious = onPrevious,
+            onPause = onPause,
+            onPlay = onPlay,
+            onNext = onNext,
+        )
 
         BottomAppBar(
             containerColor = Color.White
@@ -57,14 +70,34 @@ fun BottomAppBarCustom(
 }
 
 @Composable
-private fun MiniAudiPlayer(currentTrack: Track?, route: String?) {
-    val navigationRotes = navigationItems.map { it.screen.route }
+private fun MiniAudiPlayer(
+    playerState: PlayerState,
+    route: String?,
+    playbackDurationMs: Long,
+    currentPositionMs: Long,
+    onPrevious: () -> Unit,
+    onPause: () -> Unit,
+    onPlay: () -> Unit,
+    onNext: () -> Unit
+) {
+    val currentTrack = playerState.currentTrack
+    val navigationRotes = remember { navigationItems.map { it.screen.route } }
 
     if (currentTrack != null && route in navigationRotes)
         MiniAudioPlayer(
+            imageUrl = currentTrack.imageUrl,
+            title = currentTrack.title,
+            artist = currentTrack.artist,
+            isPlaying = playerState.isPlaying,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp)
-                .background(color = Color.Red)
+                .padding(8.dp)
+                .height(80.dp),
+            playbackDurationMs = playbackDurationMs,
+            currentPositionMs = currentPositionMs,
+            onPrevious = onPrevious,
+            onPause = onPause,
+            onPlay = onPlay,
+            onNext = onNext
         )
 }
