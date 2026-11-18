@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,6 +63,7 @@ fun PlayerControls(
             Box(
                 modifier = Modifier
                     .size(72.dp)
+                    .clip(shape = CircleShape)
                     .background(color = Color(0XFF6961f4), shape = CircleShape)
                     .clickable { if (isPlaying) onPause() else onPlay() },
                 contentAlignment = Alignment.Center
