@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,7 +40,8 @@ fun BottomAppBarCustom(
     onPrevious: () -> Unit,
     onPause: () -> Unit,
     onPlay: () -> Unit,
-    onNext: () -> Unit
+    onNext: () -> Unit,
+    onClickMiniAudioPlayer: () -> Unit
 ) {
     val navBackStackEntry = navigationState.navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
@@ -54,6 +56,7 @@ fun BottomAppBarCustom(
             onPause = onPause,
             onPlay = onPlay,
             onNext = onNext,
+            onClickMiniAudioPlayer = onClickMiniAudioPlayer
         )
 
         BottomAppBar(
@@ -83,7 +86,8 @@ private fun MiniAudiPlayer(
     onPrevious: () -> Unit,
     onPause: () -> Unit,
     onPlay: () -> Unit,
-    onNext: () -> Unit
+    onNext: () -> Unit,
+    onClickMiniAudioPlayer: () -> Unit
 ) {
     val currentTrack = playerState.currentTrack
     val navigationRotes = remember { navigationItems.map { it.screen.route } }
@@ -102,7 +106,8 @@ private fun MiniAudiPlayer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .height(80.dp),
+                    .height(80.dp)
+                    .clickable { onClickMiniAudioPlayer() },
                 playbackDurationMs = playbackDurationMs,
                 currentPositionMs = currentPositionMs,
                 onPrevious = onPrevious,
