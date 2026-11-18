@@ -14,7 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.mediastoreexampleapp.core.LoadingImage
 import com.example.mediastoreexampleapp.core.TrackInfoLayout
-import com.example.mediastoreexampleapp.presentation.player.PlayerControls
+import com.example.mediastoreexampleapp.core.PlayerControls
 import com.example.mediastoreexampleapp.presentation.player.PlayerSlider
 
 @Composable

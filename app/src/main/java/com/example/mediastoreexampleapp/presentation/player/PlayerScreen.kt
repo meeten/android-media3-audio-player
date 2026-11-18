@@ -32,6 +32,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.core.LoadingImage
+import com.example.mediastoreexampleapp.core.PlayerControls
 import com.example.mediastoreexampleapp.domain.model.Track
 
 
