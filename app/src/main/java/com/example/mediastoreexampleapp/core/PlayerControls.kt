@@ -30,7 +30,7 @@ fun PlayerControls(
     onPlay: () -> Unit,
     onNext: () -> Unit
 ) {
-    val iconSize = if (isMiniPlayer) 28.dp else 40.dp
+    val iconSize = if (isMiniPlayer) 28.dp else 52.dp
 
     Row(
         modifier = modifier,
