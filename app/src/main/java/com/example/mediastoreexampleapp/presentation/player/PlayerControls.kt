@@ -6,9 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,20 +30,23 @@ fun PlayerControls(
     onPlay: () -> Unit,
     onNext: () -> Unit
 ) {
+    val iconSize = if (isMiniPlayer) 28.dp else 40.dp
+
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.spacedBy(
+            space = if (isMiniPlayer) 8.dp else 16.dp,
+            alignment = Alignment.CenterHorizontally
+        ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onPrevious) {
             Image(
                 painter = painterResource(R.drawable.ic_skip_previous),
                 contentDescription = null,
-                modifier = Modifier.size(if (isMiniPlayer) 28.dp else 48.dp)
+                modifier = modifier.size(iconSize)
             )
         }
-
-        Spacer(modifier = Modifier.width(if (isMiniPlayer) 8.dp else 16.dp))
 
         if (isMiniPlayer) {
             IconButton(onClick = { if (isPlaying) onPause() else onPlay() }) {
@@ -54,7 +55,7 @@ fun PlayerControls(
                         if (isPlaying) painterResource(R.drawable.ic_pause)
                         else painterResource(R.drawable.ic_play_arrow),
                     contentDescription = null,
-                    modifier = Modifier.size(if (isMiniPlayer) 28.dp else 40.dp)
+                    modifier = modifier.size(iconSize)
                 )
             }
         } else {
@@ -75,14 +76,11 @@ fun PlayerControls(
             }
         }
 
-
-        Spacer(modifier = Modifier.width(if (isMiniPlayer) 8.dp else 16.dp))
-
         IconButton(onClick = onNext) {
             Image(
                 painter = painterResource(R.drawable.ic_skip_next),
                 contentDescription = null,
-                modifier = Modifier.size(if (isMiniPlayer) 28.dp else 48.dp)
+                modifier = modifier.size(iconSize)
             )
         }
     }
