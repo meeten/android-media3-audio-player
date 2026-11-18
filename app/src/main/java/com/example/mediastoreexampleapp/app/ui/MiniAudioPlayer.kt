@@ -58,6 +58,7 @@ fun MiniAudioPlayer(
 
             PlayerControls(
                 isPlaying = isPlaying,
+                isMiniPlayer = true,
                 onPrevious = onPrevious,
                 onPause = onPause,
                 onPlay = onPlay,

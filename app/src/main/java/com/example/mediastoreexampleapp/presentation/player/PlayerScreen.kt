@@ -178,6 +178,7 @@ fun PlayerScreen(
         PlayerControls(
             modifier = Modifier.fillMaxWidth(),
             isPlaying = isPlaying,
+            isMiniPlayer = false,
             onPrevious = onPrevious,
             onPause = onPause,
             onPlay = onPlay,
