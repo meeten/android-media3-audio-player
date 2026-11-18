@@ -71,6 +71,7 @@ fun MiniAudioPlayer(
             playbackDurationMs = playbackDurationMs,
             currentPositionMs = currentPositionMs,
             sliderEnabled = playbackDurationMs > 0,
+            isMiniPlayer = true,
             onChangeCurrentPosition = {}
         )
     }

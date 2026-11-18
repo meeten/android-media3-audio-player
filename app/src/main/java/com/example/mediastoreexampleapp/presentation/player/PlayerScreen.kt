@@ -172,6 +172,7 @@ fun PlayerScreen(
             onChangeCurrentPosition = onChangeCurrentPosition,
             currentPositionMs = currentPositionMs,
             sliderEnabled = playbackDurationMs > 0,
+            isMiniPlayer = false
         )
 
         Spacer(modifier = Modifier.height(12.dp))

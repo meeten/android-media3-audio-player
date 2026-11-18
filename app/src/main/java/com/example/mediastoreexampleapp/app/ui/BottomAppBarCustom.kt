@@ -8,7 +8,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
@@ -106,7 +105,6 @@ private fun MiniAudiPlayer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .height(80.dp)
                     .clickable { onClickMiniAudioPlayer() },
                 playbackDurationMs = playbackDurationMs,
                 currentPositionMs = currentPositionMs,

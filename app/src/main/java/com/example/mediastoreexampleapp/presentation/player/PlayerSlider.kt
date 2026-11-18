@@ -36,6 +36,7 @@ fun PlayerSlider(
     onChangeCurrentPosition: (Long) -> Unit,
     currentPositionMs: Long,
     sliderEnabled: Boolean,
+    isMiniPlayer: Boolean,
     activeTrackColor: Color = Color(0XFF6961f4),
     inactiveTrackColor: Color = Color(0xFFE2E5EB)
 ) {
@@ -47,7 +48,9 @@ fun PlayerSlider(
     }
 
     Slider(
-        modifier = modifier,
+        modifier = modifier.then(
+            if (isMiniPlayer) Modifier.height(20.dp) else Modifier
+        ),
         value = sliderPosition,
         onValueChange = {
             isSeeking = true
@@ -83,17 +86,19 @@ fun PlayerSlider(
         }
     )
 
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = currentPositionMs.toTimeString(),
-            fontSize = 16.sp
-        )
+    if (!isMiniPlayer) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = currentPositionMs.toTimeString(),
+                fontSize = 16.sp
+            )
 
-        Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
 
-        Text(
-            text = playbackDurationMs.toTimeString(),
-            fontSize = 16.sp
-        )
+            Text(
+                text = playbackDurationMs.toTimeString(),
+                fontSize = 16.sp
+            )
+        }
     }
 }
