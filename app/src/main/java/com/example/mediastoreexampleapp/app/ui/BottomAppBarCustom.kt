@@ -1,5 +1,12 @@
 package com.example.mediastoreexampleapp.app.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -83,21 +90,28 @@ private fun MiniAudiPlayer(
     val currentTrack = playerState.currentTrack
     val navigationRotes = remember { navigationItems.map { it.screen.route } }
 
-    if (currentTrack != null && route in navigationRotes)
-        MiniAudioPlayer(
-            imageUrl = currentTrack.imageUrl,
-            title = currentTrack.title,
-            artist = currentTrack.artist,
-            isPlaying = playerState.isPlaying,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .height(80.dp),
-            playbackDurationMs = playbackDurationMs,
-            currentPositionMs = currentPositionMs,
-            onPrevious = onPrevious,
-            onPause = onPause,
-            onPlay = onPlay,
-            onNext = onNext
-        )
+    AnimatedVisibility(
+        visible = currentTrack != null && route in navigationRotes,
+        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+        exit = slideOutVertically { it } + fadeOut()
+    ) {
+        currentTrack?.let { track ->
+            MiniAudioPlayer(
+                imageUrl = track.imageUrl,
+                title = track.title,
+                artist = track.artist,
+                isPlaying = playerState.isPlaying,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .height(80.dp),
+                playbackDurationMs = playbackDurationMs,
+                currentPositionMs = currentPositionMs,
+                onPrevious = onPrevious,
+                onPause = onPause,
+                onPlay = onPlay,
+                onNext = onNext
+            )
+        }
+    }
 }
