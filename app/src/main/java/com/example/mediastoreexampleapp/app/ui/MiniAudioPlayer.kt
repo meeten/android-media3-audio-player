@@ -36,22 +36,25 @@ fun MiniAudioPlayer(
             modifier = modifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            LoadingImage(
-                modifier = Modifier
-                    .size(72.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                loadingProgressIndicatorSize = 0.dp,
-                imageUrl = imageUrl
-            )
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                LoadingImage(
+                    modifier = Modifier
+                        .size(72.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    loadingProgressIndicatorSize = 0.dp,
+                    imageUrl = imageUrl
+                )
 
-            Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(8.dp))
 
-            TrackInfoLayout(
-                title = title,
-                artist = artist
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
+                TrackInfoLayout(
+                    title = title,
+                    artist = artist
+                )
+            }
 
             PlayerControls(
                 isPlaying = isPlaying,
