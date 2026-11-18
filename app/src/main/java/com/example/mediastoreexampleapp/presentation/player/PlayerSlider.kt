@@ -68,7 +68,7 @@ fun PlayerSlider(
                 modifier = Modifier.height(6.dp),
                 colors = SliderDefaults.colors(
                     activeTrackColor = activeTrackColor,
-                    inactiveTrackColor = inactiveTrackColor,
+                    inactiveTrackColor = if (isMiniPlayer) Color(0xFFdbd6fc) else inactiveTrackColor,
                 ),
                 thumbTrackGapSize = 0.dp,
                 drawStopIndicator = {}
