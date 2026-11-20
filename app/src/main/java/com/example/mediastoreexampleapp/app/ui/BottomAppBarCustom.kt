@@ -43,7 +43,8 @@ fun BottomAppBarCustom(
     onPause: () -> Unit,
     onPlay: () -> Unit,
     onNext: () -> Unit,
-    onClickMiniAudioPlayer: () -> Unit
+    onClickMiniAudioPlayer: () -> Unit,
+    onChangeCurrentPosition: (Long) -> Unit,
 ) {
     val navBackStackEntry = navigationState.navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
@@ -64,7 +65,8 @@ fun BottomAppBarCustom(
             onPause = onPause,
             onPlay = onPlay,
             onNext = onNext,
-            onClickMiniAudioPlayer = onClickMiniAudioPlayer
+            onClickMiniAudioPlayer = onClickMiniAudioPlayer,
+            onChangeCurrentPosition = onChangeCurrentPosition
         )
 
         BottomAppBar(
@@ -98,7 +100,8 @@ private fun MiniAudiPlayer(
     onPause: () -> Unit,
     onPlay: () -> Unit,
     onNext: () -> Unit,
-    onClickMiniAudioPlayer: () -> Unit
+    onClickMiniAudioPlayer: () -> Unit,
+    onChangeCurrentPosition: (Long) -> Unit,
 ) {
     val currentTrack = playerState.currentTrack
     val navigationRotes = remember { navigationItems.map { it.screen.route } }
@@ -127,7 +130,8 @@ private fun MiniAudiPlayer(
                 onPrevious = onPrevious,
                 onPause = onPause,
                 onPlay = onPlay,
-                onNext = onNext
+                onNext = onNext,
+                onChangeCurrentPosition = onChangeCurrentPosition
             )
         }
     }

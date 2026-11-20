@@ -30,7 +30,8 @@ fun MiniAudioPlayer(
     onPrevious: () -> Unit,
     onPause: () -> Unit,
     onPlay: () -> Unit,
-    onNext: () -> Unit
+    onNext: () -> Unit,
+    onChangeCurrentPosition: (Long) -> Unit
 ) {
     Column(modifier = modifier) {
         Row(
@@ -73,7 +74,7 @@ fun MiniAudioPlayer(
             currentPositionMs = currentPositionMs,
             sliderEnabled = playbackDurationMs > 0,
             isMiniPlayer = true,
-            onChangeCurrentPosition = {}
+            onChangeCurrentPosition = onChangeCurrentPosition
         )
     }
 }

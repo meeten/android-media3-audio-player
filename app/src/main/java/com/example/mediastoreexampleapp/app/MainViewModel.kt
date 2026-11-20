@@ -46,4 +46,10 @@ class MainViewModel @Inject constructor(
             playerController.previous()
         }
     }
+
+    fun changeCurrentPosition(currentPositionMs: Long) {
+        viewModelScope.launch {
+            playerController.setCurrentPosition(currentPositionMs)
+        }
+    }
 }

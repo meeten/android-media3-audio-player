@@ -33,12 +33,12 @@ import com.example.mediastoreexampleapp.core.extension.toTimeString
 fun PlayerSlider(
     modifier: Modifier,
     playbackDurationMs: Long,
-    onChangeCurrentPosition: (Long) -> Unit,
     currentPositionMs: Long,
     sliderEnabled: Boolean,
     isMiniPlayer: Boolean,
     activeTrackColor: Color = Color(0XFF6961f4),
-    inactiveTrackColor: Color = Color(0xFFE2E5EB)
+    inactiveTrackColor: Color = Color(0xFFE2E5EB),
+    onChangeCurrentPosition: (Long) -> Unit,
 ) {
     var sliderPosition by remember { mutableFloatStateOf(0.0f) }
     var isSeeking by remember { mutableStateOf(false) }

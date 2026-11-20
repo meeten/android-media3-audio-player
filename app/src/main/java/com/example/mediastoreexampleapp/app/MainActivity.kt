@@ -49,7 +49,8 @@ class MainActivity : ComponentActivity() {
                             onNext = viewModel::next,
                             onClickMiniAudioPlayer = {
                                 navigationState.navigateToPlayer()
-                            }
+                            },
+                            onChangeCurrentPosition = viewModel::changeCurrentPosition
                         )
                     }
                 ) { innerPadding ->
