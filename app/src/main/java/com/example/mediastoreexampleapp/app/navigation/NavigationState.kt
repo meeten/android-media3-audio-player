@@ -20,7 +20,9 @@ class NavigationState(val navController: NavHostController) {
     }
 
     fun navigateToPlayer() {
-        navController.navigate(Screen.Player.route)
+        navController.navigate(Screen.Player.route) {
+            launchSingleTop = true
+        }
     }
 }
 
