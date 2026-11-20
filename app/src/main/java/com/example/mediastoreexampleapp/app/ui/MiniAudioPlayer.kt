@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.mediastoreexampleapp.core.LoadingImage
 import com.example.mediastoreexampleapp.core.TrackInfoLayout
 import com.example.mediastoreexampleapp.core.PlayerControls
-import com.example.mediastoreexampleapp.presentation.player.PlayerSlider
+import com.example.mediastoreexampleapp.core.PlayerSlider
 
 @Composable
 fun MiniAudioPlayer(

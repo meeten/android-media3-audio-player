@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.player
+package com.example.mediastoreexampleapp.core
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
