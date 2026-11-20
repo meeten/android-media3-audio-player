@@ -1,7 +1,6 @@
 package com.example.mediastoreexampleapp.presentation.player
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
+import com.example.mediastoreexampleapp.core.Loading
 import com.example.mediastoreexampleapp.core.LoadingImage
 import com.example.mediastoreexampleapp.core.PlayerControls
 import com.example.mediastoreexampleapp.core.PlayerSlider
@@ -47,17 +47,18 @@ fun PlayerScreen(
 
     PlayerScreen(
         modifier = modifier,
-        currentTrack = uiState.currentTrack,
-        imageUrl = uiState.currentTrack?.imageUrl,
-        isFavorite = uiState.currentTrack?.isDownload ?: false,
-        title = uiState.currentTrack?.title ?: stringResource(R.string.unknown),
-        artist = uiState.currentTrack?.artist ?: stringResource(R.string.unknown),
-        playbackDurationMs = uiState.durationMs,
-        isPlaying = uiState.isPlaying,
-        onFavorite = viewModel::download,
+        currentTrack = uiState.playerState.currentTrack,
+        imageUrl = uiState.playerState.currentTrack?.imageUrl,
+        isDownloading = uiState.isTrackDownloading,
+        isDownload = uiState.playerState.currentTrack?.isDownload ?: false,
+        title = uiState.playerState.currentTrack?.title ?: stringResource(R.string.unknown),
+        artist = uiState.playerState.currentTrack?.artist ?: stringResource(R.string.unknown),
+        playbackDurationMs = uiState.playerState.durationMs,
+        isPlaying = uiState.playerState.isPlaying,
+        onDownload = viewModel::download,
         onPlay = viewModel::play,
         onPause = viewModel::pause,
-        currentPositionMs = uiState.currentPositionMs,
+        currentPositionMs = uiState.playerState.currentPositionMs,
         onChangeCurrentPosition = viewModel::changeCurrentPosition,
         onNext = viewModel::next,
         onPrevious = viewModel::previous
@@ -70,13 +71,14 @@ fun PlayerScreen(
     modifier: Modifier = Modifier,
     currentTrack: Track?,
     imageUrl: String?,
-    isFavorite: Boolean,
+    isDownloading: Boolean,
+    isDownload: Boolean,
     title: String,
     artist: String,
     playbackDurationMs: Long,
     currentPositionMs: Long,
     isPlaying: Boolean,
-    onFavorite: (Track) -> Unit,
+    onDownload: (Track) -> Unit,
     onPlay: () -> Unit,
     onPause: () -> Unit,
     onChangeCurrentPosition: (Long) -> Unit,
@@ -119,16 +121,22 @@ fun PlayerScreen(
 
             IconButton(
                 onClick = {
-                    onFavorite(currentTrack)
-                }
+                    onDownload(currentTrack)
+                },
+                enabled = !isDownloading
             ) {
-                Image(
-                    painter =
-                        if (isFavorite) painterResource(R.drawable.ic_favorite_filled)
-                        else painterResource(R.drawable.ic_favorite),
-                    contentDescription = null,
-                    modifier = Modifier.size(28.dp)
-                )
+                if (isDownloading) {
+                    Loading(modifier = Modifier.size(28.dp))
+                } else {
+                    Icon(
+                        painter =
+                            if (isDownload) painterResource(R.drawable.ic_check_circle)
+                            else painterResource(R.drawable.ic_download),
+                        contentDescription = null,
+                        modifier = Modifier.size(28.dp),
+                        tint = if (isDownload) Color(0XFF6961f4) else Color.Black
+                    )
+                }
             }
         }
 

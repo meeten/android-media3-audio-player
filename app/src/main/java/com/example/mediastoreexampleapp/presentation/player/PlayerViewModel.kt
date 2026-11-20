@@ -2,11 +2,14 @@ package com.example.mediastoreexampleapp.presentation.player
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mediastoreexampleapp.core.extension.toTrackKey
 import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.domain.model.TrackOperation
 import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
 import com.example.mediastoreexampleapp.domain.playback.PlayerController
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.usecase.ToggleTrackAvailabilityUseCase
+import com.example.mediastoreexampleapp.presentation.player.model.PlayerScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,17 +28,20 @@ class PlayerViewModel @Inject constructor(
     val uiState =
         combine(
             playerController.playerState,
-            localAudioRepository.tracksFlow
-        ) { playerState, tracks ->
-            playerState.copy(
+            localAudioRepository.tracksFlow,
+            localAudioRepository.operationsFlow,
+        ) { playerState, tracks, operations ->
+            val playerState = playerState.copy(
                 currentTrack = playerState.currentTrack?.let { current ->
                     if (tracks == null) current else current.withLocalAvailability(tracks)
                 }
             )
+            val downloading = operations[playerState.currentTrack?.toTrackKey()]
+            PlayerScreenState(playerState, downloading == TrackOperation.DOWNLOADING)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = playerController.playerState.value
+            initialValue = PlayerScreenState(playerController.playerState.value)
         )
 
 
