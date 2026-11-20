@@ -16,12 +16,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +42,8 @@ import com.example.mediastoreexampleapp.core.LoadingImage
 import com.example.mediastoreexampleapp.core.PlayerControls
 import com.example.mediastoreexampleapp.core.PlayerSlider
 import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.presentation.player.model.PlayerUiEvent
+import kotlinx.coroutines.flow.collectLatest
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,25 +53,46 @@ fun PlayerScreen(
     viewModel: PlayerViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val currentResource = rememberUpdatedState(LocalResources.current)
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    PlayerScreen(
-        modifier = modifier,
-        currentTrack = uiState.playerState.currentTrack,
-        imageUrl = uiState.playerState.currentTrack?.imageUrl,
-        isDownloading = uiState.isTrackDownloading,
-        isDownload = uiState.playerState.currentTrack?.isDownload ?: false,
-        title = uiState.playerState.currentTrack?.title ?: stringResource(R.string.unknown),
-        artist = uiState.playerState.currentTrack?.artist ?: stringResource(R.string.unknown),
-        playbackDurationMs = uiState.playerState.durationMs,
-        isPlaying = uiState.playerState.isPlaying,
-        onDownload = viewModel::download,
-        onPlay = viewModel::play,
-        onPause = viewModel::pause,
-        currentPositionMs = uiState.playerState.currentPositionMs,
-        onChangeCurrentPosition = viewModel::changeCurrentPosition,
-        onNext = viewModel::next,
-        onPrevious = viewModel::previous
-    )
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collectLatest { playerUiEvent ->
+            val message = when (playerUiEvent) {
+                PlayerUiEvent.DownloadingFailed -> currentResource.value.getString(R.string.failed_to_download_track)
+
+                PlayerUiEvent.RemovingFailed -> currentResource.value.getString(R.string.failed_to_delete_track)
+            }
+
+            snackbarHostState.showSnackbar(
+                message = message,
+                withDismissAction = true
+            )
+        }
+    }
+
+    Scaffold(snackbarHost = {
+        SnackbarHost(hostState = snackbarHostState)
+    }) {
+        PlayerScreen(
+            modifier = modifier.padding(it),
+            currentTrack = uiState.playerState.currentTrack,
+            imageUrl = uiState.playerState.currentTrack?.imageUrl,
+            isDownloading = uiState.isTrackDownloading,
+            isDownload = uiState.playerState.currentTrack?.isDownload ?: false,
+            title = uiState.playerState.currentTrack?.title ?: stringResource(R.string.unknown),
+            artist = uiState.playerState.currentTrack?.artist ?: stringResource(R.string.unknown),
+            playbackDurationMs = uiState.playerState.durationMs,
+            isPlaying = uiState.playerState.isPlaying,
+            onDownload = viewModel::download,
+            onPlay = viewModel::play,
+            onPause = viewModel::pause,
+            currentPositionMs = uiState.playerState.currentPositionMs,
+            onChangeCurrentPosition = viewModel::changeCurrentPosition,
+            onNext = viewModel::next,
+            onPrevious = viewModel::previous
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

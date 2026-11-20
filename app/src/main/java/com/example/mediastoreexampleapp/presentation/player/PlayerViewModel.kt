@@ -3,17 +3,22 @@ package com.example.mediastoreexampleapp.presentation.player
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mediastoreexampleapp.core.extension.toTrackKey
+import com.example.mediastoreexampleapp.domain.model.RemovingResult
 import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.mediastoreexampleapp.domain.model.TrackAvailabilityResult
 import com.example.mediastoreexampleapp.domain.model.TrackOperation
 import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
 import com.example.mediastoreexampleapp.domain.playback.PlayerController
 import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
 import com.example.mediastoreexampleapp.domain.usecase.ToggleTrackAvailabilityUseCase
+import com.example.mediastoreexampleapp.presentation.player.model.PlayerUiEvent
 import com.example.mediastoreexampleapp.presentation.player.model.PlayerScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,12 +49,26 @@ class PlayerViewModel @Inject constructor(
             initialValue = PlayerScreenState(playerController.playerState.value)
         )
 
+    private val _uiEvent = Channel<PlayerUiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     private var downloadJob: Job? = null
     fun download(track: Track) {
         if (downloadJob?.isActive == true) return
         downloadJob = viewModelScope.launch {
-            downloadUseCase(track)
+            when (val trackAvailabilityResult = downloadUseCase(track)) {
+                is TrackAvailabilityResult.Download -> {
+                    if (!trackAvailabilityResult.isSuccess) _uiEvent.trySend(PlayerUiEvent.DownloadingFailed)
+                }
+
+                is TrackAvailabilityResult.Delete -> {
+                    when (trackAvailabilityResult.removingResult) {
+                        RemovingResult.Failed -> _uiEvent.trySend(PlayerUiEvent.RemovingFailed)
+
+                        else -> {}
+                    }
+                }
+            }
         }
     }
 
