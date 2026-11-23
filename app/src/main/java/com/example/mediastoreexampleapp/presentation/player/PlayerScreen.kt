@@ -205,7 +205,7 @@ fun PlayerScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(if (currentTrack.isPreview) 2.dp else 16.dp))
 
         PlayerSlider(
             modifier = Modifier.fillMaxWidth(),
@@ -216,7 +216,7 @@ fun PlayerScreen(
             isMiniPlayer = false
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         PlayerControls(
             modifier = Modifier.fillMaxWidth(),
