@@ -13,6 +13,7 @@ class LocalTrackLinkTest {
         durationMs = 30_000,
         trackUri = if (preview) "https://example.com/$id.mp3" else "content://media/external/audio/media/$id",
         smallImageUrl = null,
+        largetImageUrl = null,
         isPreview = preview,
         isDownload = !preview,
         sourceRemoteId = sourceId,
