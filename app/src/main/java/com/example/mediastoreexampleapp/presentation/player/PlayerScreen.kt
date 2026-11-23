@@ -143,11 +143,10 @@ fun PlayerScreen(
         ) {
             Text(
                 text = title,
+                modifier = Modifier.weight(1f),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-
-            Spacer(modifier = Modifier.weight(1f))
 
             IconButton(
                 onClick = {
