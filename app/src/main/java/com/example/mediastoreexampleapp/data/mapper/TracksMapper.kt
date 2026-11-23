@@ -36,7 +36,8 @@ fun Cursor.toTrack(): Track {
         artist = artist,
         durationMs = duration,
         trackUri = trackUri.toString(),
-        imageUrl = imageUri?.toString(),
+        smallImageUrl = imageUri?.toString(),
+        largetImageUrl = imageUri?.toString(),
         isPreview = false,
         isDownload = true,
         localCopyUri = trackUri.toString(),
@@ -52,7 +53,8 @@ fun TrackDto.toTrack(): Track {
         durationMs = durationSeconds * MILLIS_PER_SECOND,
         artist = artistDto.name ?: UNKNOWN_ARTIST,
         trackUri = preview,
-        imageUrl = artistDto.imageUrl,
+        smallImageUrl = artistDto.smallImageUrl,
+        largetImageUrl = artistDto.largetImageUrl,
         isPreview = true,
         isDownload = false
     )

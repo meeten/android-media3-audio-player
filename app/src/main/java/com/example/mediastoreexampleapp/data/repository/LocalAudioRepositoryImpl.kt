@@ -150,7 +150,7 @@ class LocalAudioRepositoryImpl @Inject constructor(
     private suspend fun downloadAudio(track: Track, uri: Uri) {
         val coroutineContext = currentCoroutineContext()
         val artwork = try {
-            artworkDownloader.download(track.imageUrl)
+            artworkDownloader.download(track.smallImageUrl)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

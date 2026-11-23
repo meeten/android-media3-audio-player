@@ -46,11 +46,11 @@ fun TrackCard(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                LoadingImage(
+                LoadingTrackListImage(
                     modifier = Modifier
                         .size(64.dp)
                         .clip(shape = RoundedCornerShape(16.dp)),
-                    imageUrl = imageUrl,
+                    smallImageUrl = imageUrl,
                     loadingProgressIndicatorSize = 48.dp
                 )
 

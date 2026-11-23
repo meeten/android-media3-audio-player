@@ -66,7 +66,7 @@ class PlayerControllerImpl @Inject constructor(
                         MediaMetadata.Builder()
                             .setTitle(it.title)
                             .setArtist(it.artist)
-                            .setArtworkUri(it.imageUrl?.let(Uri::parse))
+                            .setArtworkUri(it.smallImageUrl?.let(Uri::parse))
                             .setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC)
                             .build()
                     )

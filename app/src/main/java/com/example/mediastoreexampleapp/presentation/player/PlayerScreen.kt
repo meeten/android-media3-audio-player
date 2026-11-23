@@ -38,9 +38,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mediastoreexampleapp.R
 import com.example.mediastoreexampleapp.core.Loading
-import com.example.mediastoreexampleapp.core.LoadingImage
+import com.example.mediastoreexampleapp.core.LoadingPlayerImage
 import com.example.mediastoreexampleapp.core.PlayerControls
 import com.example.mediastoreexampleapp.core.PlayerSlider
+import com.example.mediastoreexampleapp.core.extension.getSmallImageCacheKey
 import com.example.mediastoreexampleapp.domain.model.Track
 import com.example.mediastoreexampleapp.presentation.player.model.PlayerUiEvent
 import kotlinx.coroutines.flow.collectLatest
@@ -77,7 +78,8 @@ fun PlayerScreen(
         PlayerScreen(
             modifier = modifier.padding(it),
             currentTrack = uiState.playerState.currentTrack,
-            imageUrl = uiState.playerState.currentTrack?.imageUrl,
+            smallImageUrl = uiState.playerState.currentTrack?.smallImageUrl,
+            largerImageUrl = uiState.playerState.currentTrack?.largetImageUrl,
             isDownloading = uiState.isTrackDownloading,
             isDownload = uiState.playerState.currentTrack?.isDownload ?: false,
             title = uiState.playerState.currentTrack?.title ?: stringResource(R.string.unknown),
@@ -100,7 +102,8 @@ fun PlayerScreen(
 fun PlayerScreen(
     modifier: Modifier = Modifier,
     currentTrack: Track?,
-    imageUrl: String?,
+    smallImageUrl: String?,
+    largerImageUrl: String?,
     isDownloading: Boolean,
     isDownload: Boolean,
     title: String,
@@ -126,13 +129,13 @@ fun PlayerScreen(
             .fillMaxSize()
             .padding(16.dp),
     ) {
-        LoadingImage(
+        LoadingPlayerImage(
             modifier = Modifier
                 .height(332.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .align(Alignment.CenterHorizontally),
-            imageUrl = imageUrl,
-            loadingProgressIndicatorSize = 332.dp
+            largeImageUrl = largerImageUrl,
+            trackListImageMemoryCacheKey = smallImageUrl?.getSmallImageCacheKey()
         )
 
         Spacer(modifier = Modifier.height(24.dp))

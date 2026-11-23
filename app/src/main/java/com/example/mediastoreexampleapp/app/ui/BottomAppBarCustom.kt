@@ -113,7 +113,7 @@ private fun MiniAudiPlayer(
     ) {
         currentTrack?.let { track ->
             MiniAudioPlayer(
-                imageUrl = track.imageUrl,
+                imageUrl = track.smallImageUrl,
                 title = track.title,
                 artist = track.artist,
                 isPlaying = playerState.isPlaying,

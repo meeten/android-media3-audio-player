@@ -25,7 +25,7 @@ fun TracksScreenContent(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .clickable { onTrackClick(track) },
-                imageUrl = track.imageUrl,
+                imageUrl = track.smallImageUrl,
                 title = track.title,
                 artist = track.artist,
                 duration = track.durationMs.toTimeString(),

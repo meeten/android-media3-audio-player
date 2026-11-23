@@ -108,7 +108,7 @@ class EmbeddedArtworkTest {
                     cursor.toTrack()
                 }
                 assertEquals(title, track.title)
-                val thumbnail = resolver.loadThumbnail(android.net.Uri.parse(track.imageUrl), Size(64, 64), null)
+                val thumbnail = resolver.loadThumbnail(android.net.Uri.parse(track.smallImageUrl), Size(64, 64), null)
                 assertColor(color, thumbnail.getPixel(thumbnail.width / 2, thumbnail.height / 2))
                 thumbnail.recycle()
             }
