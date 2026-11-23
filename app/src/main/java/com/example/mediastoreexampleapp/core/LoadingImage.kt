@@ -9,7 +9,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
-import coil3.memory.MemoryCache
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.mediastoreexampleapp.R
@@ -58,9 +57,6 @@ fun LoadingPlayerImage(
             .crossfade(true)
             .build(),
         contentDescription = null,
-        loading = {
-            Loading(modifier = Modifier.size(332.dp))
-        },
         error = {
             Image(
                 painter = painterResource(R.drawable.ic_track_placeholder),
