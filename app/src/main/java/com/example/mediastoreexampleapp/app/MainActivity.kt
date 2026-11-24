@@ -19,7 +19,7 @@ import com.example.mediastoreexampleapp.presentation.deletion.MediaDeletionHost
 import com.example.mediastoreexampleapp.presentation.local_tracks.LocalTracksScreen
 import com.example.mediastoreexampleapp.presentation.player.PlayerScreen
 import com.example.mediastoreexampleapp.presentation.remote_tracks.RemoteTracksScreen
-import com.example.mediastoreexampleapp.ui.theme.MediaStoreExampleAppTheme
+import com.example.mediastoreexampleapp.core.designsystem.MediaStoreExampleAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
