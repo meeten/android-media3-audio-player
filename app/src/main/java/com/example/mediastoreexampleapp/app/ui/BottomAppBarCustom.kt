@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
@@ -52,7 +53,7 @@ fun BottomAppBarCustom(
     Column(
         modifier = modifier
             .background(
-                color = Color.White,
+                color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
             )
     ) {
@@ -70,7 +71,7 @@ fun BottomAppBarCustom(
         )
 
         BottomAppBar(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.primary
         ) {
             navigationItems.forEach { item ->
                 val selected = currentDestination?.hierarchy?.any {
@@ -82,7 +83,7 @@ fun BottomAppBarCustom(
                     icon = { Icon(painter = painterResource(item.src), contentDescription = null) },
                     label = { Text(text = stringResource(item.titleResId)) },
                     colors = NavigationBarItemDefaults.colors(
-                        indicatorColor = Color(0xFFEEE9FE)
+                        indicatorColor = MaterialTheme.colorScheme.tertiary
                     )
                 )
             }
@@ -121,7 +122,7 @@ private fun MiniAudiPlayer(
                     .fillMaxWidth()
                     .clip(shape = RoundedCornerShape(12.dp))
                     .background(
-                        color = Color(0xFFEEE9FE),
+                        color = MaterialTheme.colorScheme.tertiary,
                         shape = RoundedCornerShape(16.dp),
                     )
                     .clickable { onClickMiniAudioPlayer() },

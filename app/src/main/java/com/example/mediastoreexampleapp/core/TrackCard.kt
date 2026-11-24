@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,8 +36,8 @@ fun TrackCard(
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        border = BorderStroke(width = 1.dp, color = Color.LightGray)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outline)
     ) {
         Row(
             modifier = Modifier.padding(8.dp),
@@ -77,7 +78,7 @@ fun TrackCard(
                         else painterResource(R.drawable.ic_download),
                     contentDescription = null,
                     modifier = Modifier.clickable { onDownload() },
-                    tint = if (isDownload) Color.Green else Color.Gray,
+                    tint = if (isDownload) Color.Green else MaterialTheme.colorScheme.onSecondary,
                 )
             }
         }

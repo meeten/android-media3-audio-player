@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,21 +43,23 @@ fun PlayerControls(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onPrevious) {
-            Image(
+            Icon(
                 painter = painterResource(R.drawable.ic_skip_previous),
                 contentDescription = null,
-                modifier = modifier.size(iconSize)
+                modifier = modifier.size(iconSize),
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
 
         if (isMiniPlayer) {
             IconButton(onClick = { if (isPlaying) onPause() else onPlay() }) {
-                Image(
+                Icon(
                     painter =
                         if (isPlaying) painterResource(R.drawable.ic_pause)
                         else painterResource(R.drawable.ic_play_arrow),
                     contentDescription = null,
-                    modifier = modifier.size(iconSize)
+                    modifier = modifier.size(iconSize),
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         } else {
@@ -79,10 +82,11 @@ fun PlayerControls(
         }
 
         IconButton(onClick = onNext) {
-            Image(
+            Icon(
                 painter = painterResource(R.drawable.ic_skip_next),
                 contentDescription = null,
-                modifier = modifier.size(iconSize)
+                modifier = modifier.size(iconSize),
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
     }

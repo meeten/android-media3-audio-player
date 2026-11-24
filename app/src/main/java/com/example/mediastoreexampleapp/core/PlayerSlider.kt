@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -26,6 +27,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.mediastoreexampleapp.core.designsystem.inactiveTrackColor
+import com.example.mediastoreexampleapp.core.designsystem.inactiveTrackColorForMiniPlayer
 import com.example.mediastoreexampleapp.core.extension.toTimeString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,8 +39,6 @@ fun PlayerSlider(
     currentPositionMs: Long,
     sliderEnabled: Boolean,
     isMiniPlayer: Boolean,
-    activeTrackColor: Color = Color(0XFF6961f4),
-    inactiveTrackColor: Color = Color(0xFFE2E5EB),
     onChangeCurrentPosition: (Long) -> Unit,
 ) {
     var sliderPosition by remember { mutableFloatStateOf(0.0f) }
@@ -67,8 +68,10 @@ fun PlayerSlider(
                 sliderState,
                 modifier = Modifier.height(6.dp),
                 colors = SliderDefaults.colors(
-                    activeTrackColor = activeTrackColor,
-                    inactiveTrackColor = if (isMiniPlayer) Color(0xFFdbd6fc) else inactiveTrackColor,
+                    activeTrackColor = MaterialTheme.colorScheme.secondary,
+                    inactiveTrackColor =
+                        if (isMiniPlayer) MaterialTheme.colorScheme.inactiveTrackColorForMiniPlayer
+                        else MaterialTheme.colorScheme.inactiveTrackColor,
                 ),
                 thumbTrackGapSize = 0.dp,
                 drawStopIndicator = {}
@@ -80,7 +83,7 @@ fun PlayerSlider(
                     .size(16.dp)
                     .clip(CircleShape)
                     .background(Color.White, CircleShape)
-                    .border(4.dp, activeTrackColor, CircleShape),
+                    .border(4.dp, MaterialTheme.colorScheme.secondary, CircleShape),
                 contentAlignment = Alignment.Center
             ) {}
         }

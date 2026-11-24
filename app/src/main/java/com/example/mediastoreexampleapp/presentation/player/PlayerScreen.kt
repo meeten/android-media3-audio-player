@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -166,7 +167,9 @@ fun PlayerScreen(
                             else painterResource(R.drawable.ic_download),
                         contentDescription = null,
                         modifier = Modifier.size(28.dp),
-                        tint = if (isDownload) Color(0XFF6961f4) else Color.Black
+                        tint =
+                            if (isDownload) MaterialTheme.colorScheme.secondary
+                            else MaterialTheme.colorScheme.onSecondary
                     )
                 }
             }
@@ -179,7 +182,7 @@ fun PlayerScreen(
         if (currentTrack.isPreview) {
             Box(
                 modifier = Modifier.background(
-                    color = Color(0xFFE9E5FF),
+                    color = MaterialTheme.colorScheme.tertiary,
                     shape = RoundedCornerShape(32.dp)
                 )
             ) {
@@ -191,14 +194,14 @@ fun PlayerScreen(
                         painter = painterResource(R.drawable.ic_headphones),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
-                        tint = Color(0xFF6855DE)
+                        tint = MaterialTheme.colorScheme.onTertiary
                     )
 
                     Spacer(modifier = Modifier.width(4.dp))
 
                     Text(
                         text = stringResource(R.string.demo_30_sec),
-                        color = Color(0xFF6855DE),
+                        color = MaterialTheme.colorScheme.onTertiary,
                         fontSize = 14.sp
                     )
                 }
