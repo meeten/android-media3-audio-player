@@ -2,6 +2,4 @@
 <resources>
     <string name="retry">Повторить</string>
     <string name="unknown_error">Unknown error</string>
-    <string name="failed_to_delete_track">Не удалось удалить трек</string>
-    <string name="failed_to_download_track">Не удалось скачать трек</string>
 </resources>

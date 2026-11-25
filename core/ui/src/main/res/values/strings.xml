@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_tracks">Search tracks</string>
+    <string name="failed_to_delete_track">Не удалось удалить трек</string>
+    <string name="failed_to_download_track">Не удалось скачать трек</string>
 </resources>
