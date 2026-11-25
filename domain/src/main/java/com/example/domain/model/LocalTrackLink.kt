@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.domain.model
+package com.example.domain.model
 
 /** Never infer a deletable file from title/artist: they are not identifiers. */
 fun Track.withLocalAvailability(localTracks: List<Track>): Track {

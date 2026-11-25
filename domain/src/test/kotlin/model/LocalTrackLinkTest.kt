@@ -1,5 +1,7 @@
 package com.example.mediastoreexampleapp.domain.model
 
+import com.example.domain.model.Track
+import com.example.domain.model.withLocalAvailability
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull

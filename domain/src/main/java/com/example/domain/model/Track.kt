@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.domain.model
+package com.example.domain.model
 
 data class Track(
     val id: Long,

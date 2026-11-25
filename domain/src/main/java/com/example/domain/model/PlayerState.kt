@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.domain.model
+package com.example.domain.model
 
 data class PlayerState(
     val playlist: List<Track> = emptyList(),

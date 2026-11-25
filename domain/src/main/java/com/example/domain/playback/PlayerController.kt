@@ -1,7 +1,7 @@
-package com.example.mediastoreexampleapp.domain.playback
+package com.example.domain.playback
 
-import com.example.mediastoreexampleapp.domain.model.PlayerState
-import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.domain.model.PlayerState
+import com.example.domain.model.Track
 import kotlinx.coroutines.flow.StateFlow
 
 interface PlayerController {

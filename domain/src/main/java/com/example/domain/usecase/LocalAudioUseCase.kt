@@ -1,10 +1,10 @@
-package com.example.mediastoreexampleapp.domain.usecase
+package com.example.domain.usecase
 
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
+import com.example.domain.model.Track
+import com.example.domain.repository.LocalAudioRepository
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 class SearchLocalAudioUseCase @Inject constructor(
     private val repository: LocalAudioRepository

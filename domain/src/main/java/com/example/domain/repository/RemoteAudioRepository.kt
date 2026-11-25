@@ -1,6 +1,6 @@
-package com.example.mediastoreexampleapp.domain.repository
+package com.example.domain.repository
 
-import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.domain.model.Track
 
 interface RemoteAudioRepository {
 

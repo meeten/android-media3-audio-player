@@ -1,9 +1,9 @@
-package com.example.mediastoreexampleapp.domain.usecase
+package com.example.domain.usecase
 
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.model.TrackAvailabilityResult
-import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
-import javax.inject.Inject
+import com.example.domain.model.Track
+import com.example.domain.model.TrackAvailabilityResult
+import com.example.domain.repository.LocalAudioRepository
+import jakarta.inject.Inject
 
 class ToggleTrackAvailabilityUseCase @Inject constructor(
     private val repository: LocalAudioRepository
