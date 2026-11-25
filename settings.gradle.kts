@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "MediaStoreExampleApp"
 include(":app")
 include(":domain")
+include(":data")
