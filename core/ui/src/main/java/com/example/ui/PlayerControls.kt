@@ -1,6 +1,5 @@
-package com.example.mediastoreexampleapp.core
+package com.example.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.mediastoreexampleapp.R
-import com.example.mediastoreexampleapp.core.designsystem.MediaStoreExampleAppTheme
+import com.example.designsystem.MediaStoreExampleAppTheme
 
 @Composable
 fun PlayerControls(
@@ -55,8 +53,12 @@ fun PlayerControls(
             IconButton(onClick = { if (isPlaying) onPause() else onPlay() }) {
                 Icon(
                     painter =
-                        if (isPlaying) painterResource(R.drawable.ic_pause)
-                        else painterResource(R.drawable.ic_play_arrow),
+                        if (isPlaying) painterResource(
+                            R.drawable.ic_pause
+                        )
+                        else painterResource(
+                            R.drawable.ic_play_arrow
+                        ),
                     contentDescription = null,
                     modifier = modifier.size(iconSize),
                     tint = MaterialTheme.colorScheme.onPrimary
@@ -67,14 +69,21 @@ fun PlayerControls(
                 modifier = Modifier
                     .size(72.dp)
                     .clip(shape = CircleShape)
-                    .background(color = Color(0XFF6961f4), shape = CircleShape)
+                    .background(
+                        color = Color(0XFF6961f4),
+                        shape = CircleShape
+                    )
                     .clickable { if (isPlaying) onPause() else onPlay() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter =
-                        if (isPlaying) painterResource(R.drawable.ic_pause)
-                        else painterResource(R.drawable.ic_play_arrow),
+                        if (isPlaying) painterResource(
+                            R.drawable.ic_pause
+                        )
+                        else painterResource(
+                            R.drawable.ic_play_arrow
+                        ),
                     contentDescription = null,
                     tint = Color.White
                 )
@@ -83,7 +92,9 @@ fun PlayerControls(
 
         IconButton(onClick = onNext) {
             Icon(
-                painter = painterResource(R.drawable.ic_skip_next),
+                painter = painterResource(
+                    R.drawable.ic_skip_next
+                ),
                 contentDescription = null,
                 modifier = modifier.size(iconSize),
                 tint = MaterialTheme.colorScheme.onPrimary

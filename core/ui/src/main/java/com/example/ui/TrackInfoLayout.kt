@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.core
+package com.example.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

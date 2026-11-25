@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.core
+package com.example.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
@@ -11,8 +11,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.example.mediastoreexampleapp.R
-import com.example.mediastoreexampleapp.core.extension.getSmallImageCacheKey
+import com.example.ui.extension.getSmallImageCacheKey
 
 @Composable
 fun LoadingTrackListImage(

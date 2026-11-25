@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.core
+package com.example.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,9 +27,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mediastoreexampleapp.core.designsystem.inactiveTrackColor
-import com.example.mediastoreexampleapp.core.designsystem.inactiveTrackColorForMiniPlayer
-import com.example.mediastoreexampleapp.core.extension.toTimeString
+import com.example.designsystem.inactiveTrackColor
+import com.example.designsystem.inactiveTrackColorForMiniPlayer
+import com.example.ui.extension.toTimeString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

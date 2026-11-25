@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.core
+package com.example.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,8 +8,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.mediastoreexampleapp.core.extension.toTimeString
-import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.domain.model.Track
+import com.example.ui.extension.toTimeString
 
 @Composable
 fun TracksScreenContent(

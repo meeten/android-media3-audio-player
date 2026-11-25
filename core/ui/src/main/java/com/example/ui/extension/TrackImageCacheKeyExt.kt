@@ -1,3 +1,3 @@
-package com.example.mediastoreexampleapp.core.extension
+package com.example.ui.extension
 
 fun String.getSmallImageCacheKey(): String = "small-image:$this"

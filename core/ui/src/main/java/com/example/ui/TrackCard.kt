@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.core
+package com.example.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.mediastoreexampleapp.R
 
 @Composable
 fun TrackCard(

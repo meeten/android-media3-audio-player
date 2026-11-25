@@ -47,10 +47,6 @@ dependencies {
     //navigation
     implementation("androidx.navigation:navigation-compose:2.10.2")
 
-    //coil
-    implementation("io.coil-kt.coil3:coil-compose:3.6.3")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.6.3")
-
     //leakcanary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
 
