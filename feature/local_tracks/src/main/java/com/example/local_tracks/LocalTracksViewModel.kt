@@ -1,11 +1,11 @@
-package com.example.mediastoreexampleapp.presentation.local_tracks
+package com.example.local_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.usecase.ToggleTrackAvailabilityUseCase
-import com.example.mediastoreexampleapp.domain.usecase.SearchLocalAudioUseCase
-import com.example.mediastoreexampleapp.presentation.local_tracks.model.LocalTracksScreenState
+import com.example.domain.model.Track
+import com.example.domain.usecase.SearchLocalAudioUseCase
+import com.example.domain.usecase.ToggleTrackAvailabilityUseCase
+import com.example.local_tracks.model.LocalTracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
