@@ -1,6 +1,6 @@
-package com.example.mediastoreexampleapp.presentation.remote_tracks.model
+package com.example.remote_tracks.model
 
-import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.domain.model.Track
 
 sealed interface RemoteTracksScreenState {
 

@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.remote_tracks.model
+package com.example.remote_tracks.model
 
 sealed interface RemoteTracksEvent {
     object DownloadFailed : RemoteTracksEvent

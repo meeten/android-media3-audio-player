@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.remote_tracks
+package com.example.remote_tracks
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,13 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.mediastoreexampleapp.R
-import com.example.mediastoreexampleapp.core.Loading
-import com.example.mediastoreexampleapp.core.SearchBarCustom
-import com.example.mediastoreexampleapp.core.TracksScreenContent
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksEvent
-import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksScreenState
+import com.example.domain.model.Track
+import com.example.remote_tracks.model.RemoteTracksEvent
+import com.example.remote_tracks.model.RemoteTracksScreenState
+import com.example.ui.Loading
+import com.example.ui.SearchBarCustom
+import com.example.ui.TracksScreenContent
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

@@ -1,17 +1,16 @@
-package com.example.mediastoreexampleapp.presentation.remote_tracks
+package com.example.remote_tracks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediastoreexampleapp.core.extension.toTrackKey
-import com.example.mediastoreexampleapp.domain.model.RemovingResult
-import com.example.mediastoreexampleapp.domain.model.TrackAvailabilityResult
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.model.withLocalAvailability
-import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
-import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
-import com.example.mediastoreexampleapp.domain.usecase.ToggleTrackAvailabilityUseCase
-import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksEvent
-import com.example.mediastoreexampleapp.presentation.remote_tracks.model.RemoteTracksScreenState
+import com.example.domain.model.RemovingResult
+import com.example.domain.model.Track
+import com.example.domain.model.TrackAvailabilityResult
+import com.example.domain.model.withLocalAvailability
+import com.example.domain.repository.LocalAudioRepository
+import com.example.domain.repository.RemoteAudioRepository
+import com.example.domain.usecase.ToggleTrackAvailabilityUseCase
+import com.example.remote_tracks.model.RemoteTracksEvent
+import com.example.remote_tracks.model.RemoteTracksScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
