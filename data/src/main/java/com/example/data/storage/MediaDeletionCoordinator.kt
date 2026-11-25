@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.data.storage
+package com.example.data.storage
 
 import android.Manifest
 import android.app.RecoverableSecurityException
@@ -12,7 +12,7 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import com.example.mediastoreexampleapp.domain.model.RemovingResult
+import com.example.domain.model.RemovingResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers

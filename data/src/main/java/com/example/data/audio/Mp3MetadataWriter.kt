@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.data.audio
+package com.example.data.audio
 
 import java.io.ByteArrayOutputStream
 import java.io.EOFException

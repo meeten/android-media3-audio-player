@@ -1,16 +1,16 @@
-package com.example.mediastoreexampleapp.data.di
+package com.example.data.di
 
 import android.content.ComponentName
 import android.content.Context
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import com.example.mediastoreexampleapp.data.repository.LocalAudioRepositoryImpl
-import com.example.mediastoreexampleapp.data.playback.PlayerControllerImpl
-import com.example.mediastoreexampleapp.data.repository.RemoteAudioRepositoryImpl
-import com.example.mediastoreexampleapp.data.service.PlaybackService
-import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
-import com.example.mediastoreexampleapp.domain.playback.PlayerController
-import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
+import com.example.data.playback.PlayerControllerImpl
+import com.example.data.repository.LocalAudioRepositoryImpl
+import com.example.data.repository.RemoteAudioRepositoryImpl
+import com.example.data.service.PlaybackService
+import com.example.domain.playback.PlayerController
+import com.example.domain.repository.LocalAudioRepository
+import com.example.domain.repository.RemoteAudioRepository
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.Binds
 import dagger.Module

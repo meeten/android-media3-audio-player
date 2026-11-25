@@ -1,7 +1,7 @@
-package com.example.mediastoreexampleapp.data.network
+package com.example.data.network
 
-import com.example.mediastoreexampleapp.data.network.model.TracksDataDto
-import com.example.mediastoreexampleapp.data.network.model.TracksResponseDto
+import com.example.data.network.model.TracksDataDto
+import com.example.data.network.model.TracksResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

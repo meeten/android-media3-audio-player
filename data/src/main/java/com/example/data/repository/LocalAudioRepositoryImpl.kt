@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.data.repository
+package com.example.data.repository
 
 import android.content.ContentValues
 import android.content.Context
@@ -9,16 +9,15 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import com.example.mediastoreexampleapp.core.extension.toTrackKey
-import com.example.mediastoreexampleapp.data.audio.ArtworkDownloader
-import com.example.mediastoreexampleapp.data.audio.Mp3MetadataWriter
-import com.example.mediastoreexampleapp.data.mapper.toTrack
-import com.example.mediastoreexampleapp.data.storage.MediaDeletionCoordinator
-import com.example.mediastoreexampleapp.domain.model.RemovingResult
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.model.TrackKey
-import com.example.mediastoreexampleapp.domain.model.TrackOperation
-import com.example.mediastoreexampleapp.domain.repository.LocalAudioRepository
+import com.example.data.audio.ArtworkDownloader
+import com.example.data.audio.Mp3MetadataWriter
+import com.example.data.mapper.toTrack
+import com.example.data.storage.MediaDeletionCoordinator
+import com.example.domain.model.RemovingResult
+import com.example.domain.model.Track
+import com.example.domain.model.TrackKey
+import com.example.domain.model.TrackOperation
+import com.example.domain.repository.LocalAudioRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope

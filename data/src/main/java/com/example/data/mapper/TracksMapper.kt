@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.data.mapper
+package com.example.data.mapper
 
 import android.content.ContentUris
 import android.database.Cursor
@@ -6,8 +6,8 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.core.database.getLongOrNull
 import androidx.core.net.toUri
-import com.example.mediastoreexampleapp.data.network.model.TrackDto
-import com.example.mediastoreexampleapp.domain.model.Track
+import com.example.data.network.model.TrackDto
+import com.example.domain.model.Track
 
 fun Cursor.toTrack(): Track {
     val id = getLong(getColumnIndexOrThrow(MediaStore.Audio.Media._ID))

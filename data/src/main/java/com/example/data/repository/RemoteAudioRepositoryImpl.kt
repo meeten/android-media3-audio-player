@@ -1,9 +1,9 @@
-package com.example.mediastoreexampleapp.data.repository
+package com.example.data.repository
 
-import com.example.mediastoreexampleapp.data.mapper.toTrack
-import com.example.mediastoreexampleapp.data.network.ApiService
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.repository.RemoteAudioRepository
+import com.example.data.mapper.toTrack
+import com.example.data.network.ApiService
+import com.example.domain.model.Track
+import com.example.domain.repository.RemoteAudioRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

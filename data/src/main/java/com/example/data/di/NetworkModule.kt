@@ -1,6 +1,6 @@
-package com.example.mediastoreexampleapp.data.di
+package com.example.data.di
 
-import com.example.mediastoreexampleapp.data.network.ApiService
+import com.example.data.network.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

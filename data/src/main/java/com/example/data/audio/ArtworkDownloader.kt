@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.data.audio
+package com.example.data.audio
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

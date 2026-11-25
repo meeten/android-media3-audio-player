@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.data.service
+package com.example.data.service
 
 import android.os.Process
 import android.util.Log
