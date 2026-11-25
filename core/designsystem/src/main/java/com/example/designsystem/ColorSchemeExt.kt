@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.core.designsystem
+package com.example.designsystem
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color

@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.core.designsystem
+package com.example.designsystem
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

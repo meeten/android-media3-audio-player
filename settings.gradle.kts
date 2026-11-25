@@ -26,3 +26,5 @@ rootProject.name = "MediaStoreExampleApp"
 include(":app")
 include(":domain")
 include(":data")
+include(":core")
+include(":core:designsystem")
