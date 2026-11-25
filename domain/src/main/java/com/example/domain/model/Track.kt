@@ -13,4 +13,10 @@ data class Track(
     val isDownloading: Boolean = false,
     val sourceRemoteId: Long? = null,
     val localCopyUri: String? = null,
-)
+) {
+    fun toTrackKey(): TrackKey {
+        return TrackKey(
+            id = id
+        )
+    }
+}
