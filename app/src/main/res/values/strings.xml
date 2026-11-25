@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">MediaStoreExampleApp</string>
-    <string name="demo_30_sec">Демо: 30 сек</string>
     <string name="local_tracks">Скачанные</string>
     <string name="remote_tracks">Треки API</string>
-    <string name="unknown">Unknown</string>
     <string name="track_deletion_busy">Сначала завершите подтверждение удаления</string>
     <string name="track_deletion_not_found">Локальный файл не найден</string>
 </resources>

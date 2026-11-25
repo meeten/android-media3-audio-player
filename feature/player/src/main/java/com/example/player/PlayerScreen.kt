@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.player
+package com.example.player
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -36,14 +36,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.mediastoreexampleapp.R
-import com.example.mediastoreexampleapp.core.Loading
-import com.example.mediastoreexampleapp.core.LoadingPlayerImage
-import com.example.mediastoreexampleapp.core.PlayerControls
-import com.example.mediastoreexampleapp.core.PlayerSlider
-import com.example.mediastoreexampleapp.core.extension.getSmallImageCacheKey
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.presentation.player.model.PlayerUiEvent
+import com.example.domain.model.Track
+import com.example.player.model.PlayerUiEvent
+import com.example.ui.Loading
+import com.example.ui.LoadingPlayerImage
+import com.example.ui.PlayerControls
+import com.example.ui.PlayerSlider
+import com.example.ui.extension.getSmallImageCacheKey
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -60,9 +59,9 @@ fun PlayerScreen(
     LaunchedEffect(viewModel.uiEvent) {
         viewModel.uiEvent.collectLatest { playerUiEvent ->
             val message = when (playerUiEvent) {
-                PlayerUiEvent.DownloadingFailed -> currentResource.value.getString(R.string.failed_to_download_track)
+                PlayerUiEvent.DownloadingFailed -> currentResource.value.getString(com.example.ui.R.string.failed_to_delete_track)
 
-                PlayerUiEvent.RemovingFailed -> currentResource.value.getString(R.string.failed_to_delete_track)
+                PlayerUiEvent.RemovingFailed -> currentResource.value.getString(com.example.ui.R.string.failed_to_delete_track)
             }
 
             snackbarHostState.showSnackbar(
@@ -162,8 +161,8 @@ fun PlayerScreen(
                 } else {
                     Icon(
                         painter =
-                            if (isDownload) painterResource(R.drawable.ic_check_circle)
-                            else painterResource(R.drawable.ic_download),
+                            if (isDownload) painterResource(com.example.ui.R.drawable.ic_check_circle)
+                            else painterResource(com.example.ui.R.drawable.ic_download),
                         contentDescription = null,
                         modifier = Modifier.size(28.dp),
                         tint =

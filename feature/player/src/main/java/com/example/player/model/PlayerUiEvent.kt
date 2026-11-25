@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.player.model
+package com.example.player.model
 
 sealed interface PlayerUiEvent {
 
