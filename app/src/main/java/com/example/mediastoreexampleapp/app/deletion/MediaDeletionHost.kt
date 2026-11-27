@@ -15,11 +15,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.data.storage.MediaDeletionCoordinator
+import com.example.domain.model.RemovingResult
 import com.example.mediastoreexampleapp.R
-import com.example.mediastoreexampleapp.data.storage.MediaDeletionCoordinator
-import com.example.mediastoreexampleapp.domain.model.RemovingResult
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 
 /** Lives above navigation, so switching screens cannot change the deletion target. */
 @Composable
@@ -40,7 +40,11 @@ fun MediaDeletionHost(coordinator: MediaDeletionCoordinator) {
                     id, uri, retryAfterApproval, approved,
                 )
                 if (outcome == RemovingResult.Failed) {
-                    Toast.makeText(context, R.string.track_deletion_failed, Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        com.example.ui.R.string.failed_to_delete_track,
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 launchedId = null
                 launchedUri = null
@@ -52,7 +56,11 @@ fun MediaDeletionHost(coordinator: MediaDeletionCoordinator) {
         ActivityResultContracts.StartIntentSenderForResult(),
     ) { result ->
         if (result.data?.hasExtra(ActivityResultContracts.StartIntentSenderForResult.EXTRA_SEND_INTENT_EXCEPTION) == true) {
-            Toast.makeText(context, R.string.track_deletion_failed, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                com.example.ui.R.string.failed_to_delete_track,
+                Toast.LENGTH_LONG
+            ).show()
         }
         finish(result.resultCode == Activity.RESULT_OK)
     }
@@ -65,7 +73,7 @@ fun MediaDeletionHost(coordinator: MediaDeletionCoordinator) {
             val message = when (result) {
                 RemovingResult.Busy -> R.string.track_deletion_busy
                 RemovingResult.NotFound -> R.string.track_deletion_not_found
-                else -> R.string.track_deletion_failed
+                else -> com.example.ui.R.string.failed_to_delete_track
             }
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
@@ -87,10 +95,15 @@ fun MediaDeletionHost(coordinator: MediaDeletionCoordinator) {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            coordinator.complete(request.id, request.uri, request.retryAfterApproval, approved = false)
+            coordinator.complete(
+                request.id,
+                request.uri,
+                request.retryAfterApproval,
+                approved = false
+            )
             launchedId = null
             launchedUri = null
-            Toast.makeText(context, R.string.track_deletion_failed, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, com.example.ui.R.string.failed_to_delete_track, Toast.LENGTH_LONG).show()
         }
     }
 }

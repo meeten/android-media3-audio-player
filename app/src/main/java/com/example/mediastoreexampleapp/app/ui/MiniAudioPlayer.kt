@@ -13,10 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.mediastoreexampleapp.core.LoadingTrackListImage
-import com.example.mediastoreexampleapp.core.TrackInfoLayout
-import com.example.mediastoreexampleapp.core.PlayerControls
-import com.example.mediastoreexampleapp.core.PlayerSlider
+import com.example.ui.LoadingTrackListImage
+import com.example.ui.PlayerControls
+import com.example.ui.PlayerSlider
+import com.example.ui.TrackInfoLayout
 
 @Composable
 fun MiniAudioPlayer(
