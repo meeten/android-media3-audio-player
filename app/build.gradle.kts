@@ -30,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -40,39 +40,27 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
 dependencies {
-
-    //hilt
-    implementation("com.google.dagger:hilt-android:2.60.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.4.0")
-    implementation(libs.androidx.compose.runtime)
-    ksp("com.google.dagger:hilt-compiler:2.60.1")
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:ui"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":feature:player"))
+    implementation(project(":feature:local_tracks"))
+    implementation(project(":feature:remote_tracks"))
 
     //navigation
     implementation("androidx.navigation:navigation-compose:2.10.2")
 
-    //media3
-    implementation("androidx.media3:media3-exoplayer:1.11.1")
-    implementation("androidx.media3:media3-ui-compose:1.11.1")
-    implementation("androidx.media3:media3-ui-compose-material3:1.11.1")
-    implementation("androidx.media3:media3-session:1.11.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.11.0")
-
-    //retrofit
-    val retrofitVersion = "2.11.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:5.5.0"))
-    implementation("com.squareup.okhttp3:okhttp")
-    implementation("com.squareup.okhttp3:logging-interceptor")
-
-    //coil
-    implementation("io.coil-kt.coil3:coil-compose:3.6.3")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.6.3")
+    //hilt
+    implementation("com.google.dagger:hilt-android:2.60.1")
+    ksp("com.google.dagger:hilt-compiler:2.60.1")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel-compose:1.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0")
 
     //leakcanary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")

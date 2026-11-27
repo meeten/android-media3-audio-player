@@ -1,0 +1,134 @@
+package com.example.ui
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.designsystem.MediaStoreExampleAppTheme
+
+@Composable
+fun PlayerControls(
+    modifier: Modifier = Modifier,
+    isPlaying: Boolean,
+    isMiniPlayer: Boolean,
+    onPrevious: () -> Unit,
+    onPause: () -> Unit,
+    onPlay: () -> Unit,
+    onNext: () -> Unit
+) {
+    val iconSize = if (isMiniPlayer) 28.dp else 52.dp
+
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(
+            space = if (isMiniPlayer) 8.dp else 16.dp,
+            alignment = Alignment.CenterHorizontally
+        ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onPrevious) {
+            Icon(
+                painter = painterResource(R.drawable.ic_skip_previous),
+                contentDescription = null,
+                modifier = modifier.size(iconSize),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+
+        if (isMiniPlayer) {
+            IconButton(onClick = { if (isPlaying) onPause() else onPlay() }) {
+                Icon(
+                    painter =
+                        if (isPlaying) painterResource(
+                            R.drawable.ic_pause
+                        )
+                        else painterResource(
+                            R.drawable.ic_play_arrow
+                        ),
+                    contentDescription = null,
+                    modifier = modifier.size(iconSize),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(shape = CircleShape)
+                    .background(
+                        color = Color(0XFF6961f4),
+                        shape = CircleShape
+                    )
+                    .clickable { if (isPlaying) onPause() else onPlay() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter =
+                        if (isPlaying) painterResource(
+                            R.drawable.ic_pause
+                        )
+                        else painterResource(
+                            R.drawable.ic_play_arrow
+                        ),
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+        }
+
+        IconButton(onClick = onNext) {
+            Icon(
+                painter = painterResource(
+                    R.drawable.ic_skip_next
+                ),
+                contentDescription = null,
+                modifier = modifier.size(iconSize),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+    }
+}
+
+@Preview(name = "Playing State", showBackground = true)
+@Composable
+private fun PlayerControlsPlayingPreview() {
+    MediaStoreExampleAppTheme {
+        PlayerControls(
+            isPlaying = true,
+            isMiniPlayer = true,
+            onPrevious = {},
+            onPause = {},
+            onPlay = {},
+            onNext = {}
+        )
+    }
+}
+
+@Preview(name = "Paused State", showBackground = true)
+@Composable
+private fun PlayerControlsPausedPreview() {
+    MediaStoreExampleAppTheme {
+        PlayerControls(
+            isPlaying = false,
+            isMiniPlayer = false,
+            onPrevious = {},
+            onPause = {},
+            onPlay = {},
+            onNext = {}
+        )
+    }
+}

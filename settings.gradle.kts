@@ -24,3 +24,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "MediaStoreExampleApp"
 include(":app")
+include(":domain")
+include(":data")
+include(":core")
+include(":core:designsystem")
+include(":core:ui")
+include(":feature")
+include(":feature:remote_tracks")
+include(":feature:local_tracks")
+include(":feature:player")

@@ -2,8 +2,8 @@ package com.example.mediastoreexampleapp.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mediastoreexampleapp.domain.model.Track
-import com.example.mediastoreexampleapp.domain.playback.PlayerController
+import com.example.domain.model.Track
+import com.example.domain.playback.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

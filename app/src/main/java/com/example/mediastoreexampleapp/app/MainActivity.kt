@@ -11,15 +11,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.mediastoreexampleapp.app.ui.BottomAppBarCustom
+import com.example.data.storage.MediaDeletionCoordinator
+import com.example.designsystem.MediaStoreExampleAppTheme
+import com.example.local_tracks.LocalTracksScreen
+import com.example.mediastoreexampleapp.app.deletion.MediaDeletionHost
 import com.example.mediastoreexampleapp.app.navigation.AppNavGraph
 import com.example.mediastoreexampleapp.app.navigation.rememberNavigationState
-import com.example.mediastoreexampleapp.data.storage.MediaDeletionCoordinator
-import com.example.mediastoreexampleapp.presentation.deletion.MediaDeletionHost
-import com.example.mediastoreexampleapp.presentation.local_tracks.LocalTracksScreen
-import com.example.mediastoreexampleapp.presentation.player.PlayerScreen
-import com.example.mediastoreexampleapp.presentation.remote_tracks.RemoteTracksScreen
-import com.example.mediastoreexampleapp.core.designsystem.MediaStoreExampleAppTheme
+import com.example.mediastoreexampleapp.app.ui.BottomAppBarCustom
+import com.example.player.PlayerScreen
+import com.example.remote_tracks.RemoteTracksScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

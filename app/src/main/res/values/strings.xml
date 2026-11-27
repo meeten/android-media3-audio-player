@@ -1,19 +1,7 @@
 <resources>
     <string name="app_name">MediaStoreExampleApp</string>
-    <string name="audio_permission_required">Чтобы показать вашу музыку, приложению нужен доступ к аудиофайлам на устройстве.</string>
-    <string name="audio_permission_description">Разрешите доступ, чтобы увидеть доступные треки.</string>
-    <string name="grant_audio_permission">Разрешить доступ</string>
-    <string name="open_settings">Открыть настройки</string>
-    <string name="unknown_error">Unknown error</string>
-    <string name="retry">Повторить</string>
-    <string name="demo_30_sec">Демо: 30 сек</string>
-    <string name="search_tracks">Search tracks</string>
     <string name="local_tracks">Скачанные</string>
     <string name="remote_tracks">Треки API</string>
-    <string name="unknown">Unknown</string>
-    <string name="track_deletion_failed">Не удалось удалить трек</string>
     <string name="track_deletion_busy">Сначала завершите подтверждение удаления</string>
     <string name="track_deletion_not_found">Локальный файл не найден</string>
-    <string name="failed_to_delete_track">Не удалось удалить трек</string>
-    <string name="failed_to_download_track">Не удалось скачать трек</string>
 </resources>
