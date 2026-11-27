@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -28,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -38,14 +40,27 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
 dependencies {
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:ui"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":feature:player"))
+    implementation(project(":feature:local_tracks"))
+    implementation(project(":feature:remote_tracks"))
 
     //navigation
     implementation("androidx.navigation:navigation-compose:2.10.2")
+
+    //hilt
+    implementation("com.google.dagger:hilt-android:2.60.1")
+    ksp("com.google.dagger:hilt-compiler:2.60.1")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel-compose:1.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0")
 
     //leakcanary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
