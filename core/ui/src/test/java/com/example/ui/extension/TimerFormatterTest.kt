@@ -1,9 +1,8 @@
-package com.example.mediastoreexampleapp.core.extension
+package com.example.ui.extension
 
-import com.example.mediastoreexampleapp.core.extension.toTimeString
-import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.util.Locale
 
 class TimerFormatterTest {
 
