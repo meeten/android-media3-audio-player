@@ -44,9 +44,9 @@ fun RemoteTracksScreen(
     LaunchedEffect(viewModel.uiEvent) {
         viewModel.uiEvent.collectLatest {
             val message = when (it) {
-                is RemoteTracksEvent.DeleteFailed -> currentResource.value.getString(R.string.failed_to_delete_track)
+                is RemoteTracksEvent.DeleteFailed -> currentResource.value.getString(com.example.ui.R.string.failed_to_delete_track)
 
-                is RemoteTracksEvent.DownloadFailed -> currentResource.value.getString(R.string.failed_to_download_track)
+                is RemoteTracksEvent.DownloadFailed -> currentResource.value.getString(com.example.ui.R.string.failed_to_download_track)
             }
             snackbarHostState.showSnackbar(
                 message = message,
