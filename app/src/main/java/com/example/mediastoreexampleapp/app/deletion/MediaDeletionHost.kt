@@ -1,4 +1,4 @@
-package com.example.mediastoreexampleapp.presentation.deletion
+package com.example.mediastoreexampleapp.app.deletion
 
 import android.Manifest
 import android.app.Activity

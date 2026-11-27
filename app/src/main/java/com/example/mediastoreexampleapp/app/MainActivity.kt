@@ -15,7 +15,7 @@ import com.example.mediastoreexampleapp.app.ui.BottomAppBarCustom
 import com.example.mediastoreexampleapp.app.navigation.AppNavGraph
 import com.example.mediastoreexampleapp.app.navigation.rememberNavigationState
 import com.example.mediastoreexampleapp.data.storage.MediaDeletionCoordinator
-import com.example.mediastoreexampleapp.presentation.deletion.MediaDeletionHost
+import com.example.mediastoreexampleapp.app.deletion.MediaDeletionHost
 import com.example.mediastoreexampleapp.presentation.local_tracks.LocalTracksScreen
 import com.example.mediastoreexampleapp.presentation.player.PlayerScreen
 import com.example.mediastoreexampleapp.presentation.remote_tracks.RemoteTracksScreen
